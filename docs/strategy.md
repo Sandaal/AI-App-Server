@@ -122,11 +122,12 @@ Developer flow: `aiapp new <blueprint> <name>` → `aiapp source add <data>` →
 - Quotas, isolation, backup/restore, encryption.
 - Python SDK + JS front-end SDK; versioned deploys, hot reload, rollback.
 - Blueprint gallery, `aiapp` CLI, starter connectors, VS Code extension, Entra ID, azd templates.
+- Tool calling and MCP client (needed by blueprints 2, 5, 7, 8); Windows support.
 - Exit: all 10 blueprints deploy in minutes on standard hardware with no external stores.
 
 **Phase 1.x: Hardening**
 - Consumer groups, replay, retention, cron, DLQ tooling.
-- Observability: traces, token/cost dashboards, eval hooks. MCP/tool gateway.
+- Consumer groups, multi-partition topics; MCP gateway (publishing app tools to outside agents); evaluation hooks; Key Vault integration.
 
 **Phase 2: Scale and first hardware leap (Vera Rubin)**
 - Clustering and replication; HAL v1; local model hosting via vLLM/Dynamo; Context Memory service.
@@ -136,6 +137,8 @@ Developer flow: `aiapp new <blueprint> <name>` → `aiapp source add <data>` →
 **Phase 3: Future-hardware native (Rubin Ultra 2027 → Feynman 2028)**
 - DPU offload; CXL memory tiers; GPU/LPU-aware routing; confidential computing and attestation.
 - Exit: measurable gains on next-generation hardware with no app code changes.
+
+Detailed designs: [Phase 0](design/phase0.md) · [Phase 1](design/phase1.md) · [Phase 2](design/phase2.md) · [Phase 3](design/phase3.md).
 
 ## 10. Cost strategy
 - **Don't buy racks.** A Vera Rubin NVL72 rack is estimated at $7.8M–$9.1M (Morgan Stanley / Bernstein), draws ~190–230 kW and needs liquid cooling. Owning only beats renting at sustained >60–70% utilization in an existing facility.
