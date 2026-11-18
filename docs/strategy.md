@@ -2,6 +2,8 @@
 
 *Status: working draft. Last updated 2026-11-18.*
 
+**License:** open source under Apache License 2.0 (see ADR 0002). Possible future business model: open core.
+
 ## 1. Vision
 **An application server for AI.** Developers build AI apps in Python and JavaScript and deploy them the way they deploy web apps. The server provides every runtime service those apps need: model access, memory, cache, events, vectors, security, guardrails, observability and deployment, in one binary that runs on any hardware.
 
@@ -151,6 +153,6 @@ Developer flow: `aiws new <blueprint> <name>` → `aiws source add <data>` → `
 
 ## 12. Open questions
 1. **Use cases:** to be provided; they validate the Phase 1 scope and the blueprint list.
-2. **Audience:** general / open-source product vs aimed at regulated clients (decides whether compliance features move earlier).
+2. **Audience:** open source is decided; still open is whether regulated clients are a priority (decides whether compliance features move earlier).
 3. **Local model hosting in Phase 2:** confirm.
 4. **Product name:** "AI App Server" is a working name.
