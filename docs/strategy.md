@@ -126,8 +126,7 @@ Developer flow: `aiapp new <blueprint> <name>` → `aiapp source add <data>` →
 - Exit: all 10 blueprints deploy in minutes on standard hardware with no external stores.
 
 **Phase 1.x: Hardening**
-- Consumer groups, replay, retention, cron, DLQ tooling.
-- Consumer groups, multi-partition topics; MCP gateway (publishing app tools to outside agents); evaluation hooks; Key Vault integration.
+- Consumer groups, multi-partition topics, DLQ tooling; MCP gateway (publishing app tools to outside agents); evaluation hooks; Key Vault integration.
 
 **Phase 2: Scale and first hardware leap (Vera Rubin)**
 - Clustering and replication; HAL v1; local model hosting via vLLM/Dynamo; Context Memory service.
