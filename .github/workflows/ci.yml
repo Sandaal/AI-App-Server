@@ -26,4 +26,4 @@ jobs:
       - name: Test
         run: go test -race -count=1 ./...
       - name: Build
-        run: go build -o bin/aiws ./core/cmd/aiws
+        run: go build -o bin/aiapp ./core/cmd/aiapp

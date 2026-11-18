@@ -8,9 +8,9 @@
 
 syntax = "proto3";
 
-package aiws.v1;
+package aiapp.v1;
 
-option go_package = "github.com/Sandaal/AI-App-Server/core/proto/aiws/v1;aiwsv1";
+option go_package = "github.com/Sandaal/AI-App-Server/core/proto/aiapp/v1;aiappv1";
 
 import "google/protobuf/struct.proto";
 

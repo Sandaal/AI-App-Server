@@ -28,7 +28,7 @@ func freeAddr(t *testing.T) string {
 func startServer(t *testing.T, reg *apps.Registry) (addr, sock string, cancel func()) {
 	t.Helper()
 	// Short dir: Unix socket paths are limited to ~104 bytes on macOS.
-	dir, err := os.MkdirTemp("", "aiws")
+	dir, err := os.MkdirTemp("", "aiapp")
 	if err != nil {
 		t.Fatal(err)
 	}

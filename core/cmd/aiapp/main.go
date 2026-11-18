@@ -1,4 +1,4 @@
-// Command aiws is the AI App Server: `aiws serve` runs the server; other
+// Command aiapp is the AI App Server: `aiapp serve` runs the server; other
 // subcommands are the developer CLI.
 package main
 
@@ -22,12 +22,12 @@ import (
 	"github.com/Sandaal/AI-App-Server/core/internal/server"
 )
 
-const usage = `aiws - AI App Server
+const usage = `aiapp - AI App Server
 
 Usage:
-  aiws serve [--addr 127.0.0.1:8080] [--data-dir ./data] [--log-level info]
-  aiws apps  [--data-dir ./data]        list deployed apps (talks to a running server)
-  aiws version
+  aiapp serve [--addr 127.0.0.1:8080] [--data-dir ./data] [--log-level info]
+  aiapp apps  [--data-dir ./data]        list deployed apps (talks to a running server)
+  aiapp version
 
 More commands (new, source, deploy) arrive in later Phase 0 milestones.
 `
@@ -44,7 +44,7 @@ func main() {
 	case "apps":
 		err = runApps(os.Args[2:], os.Stdout)
 	case "version", "--version", "-v":
-		fmt.Printf("aiws %s (%s)\n", buildinfo.Version, buildinfo.Commit)
+		fmt.Printf("aiapp %s (%s)\n", buildinfo.Version, buildinfo.Commit)
 	case "help", "--help", "-h":
 		fmt.Print(usage)
 	default:
@@ -96,7 +96,7 @@ func runApps(args []string, out io.Writer) error {
 	}
 	resp, err := client.Get("http://admin/admin/apps")
 	if err != nil {
-		return fmt.Errorf("cannot reach server at %s (is `aiws serve` running?): %w", sock, err)
+		return fmt.Errorf("cannot reach server at %s (is `aiapp serve` running?): %w", sock, err)
 	}
 	defer resp.Body.Close()
 

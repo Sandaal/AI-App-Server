@@ -107,7 +107,7 @@
 | 9 | Classifier / router | Event topics, small/local models, KV |
 | 10 | Meeting and voice notes | File store, speech model, jobs |
 
-Developer flow: `aiws new <blueprint> <name>` → `aiws source add <data>` → `aiws deploy`. Customize via `ai-app.yaml` or Python handlers.
+Developer flow: `aiapp new <blueprint> <name>` → `aiapp source add <data>` → `aiapp deploy`. Customize via `ai-app.yaml` or Python handlers.
 
 **What "minutes" doesn't cover:** production readiness (SSO, quality testing, approvals), large-volume data ingestion, and custom enterprise connectors take longer.
 
@@ -121,7 +121,7 @@ Developer flow: `aiws new <blueprint> <name>` → `aiws source add <data>` → `
 - Built-in storage: KV/data structures, cache, vectors, search, files, audit logs; topics and job queues.
 - Quotas, isolation, backup/restore, encryption.
 - Python SDK + JS front-end SDK; versioned deploys, hot reload, rollback.
-- Blueprint gallery, `aiws` CLI, starter connectors, VS Code extension, Entra ID, azd templates.
+- Blueprint gallery, `aiapp` CLI, starter connectors, VS Code extension, Entra ID, azd templates.
 - Exit: all 10 blueprints deploy in minutes on standard hardware with no external stores.
 
 **Phase 1.x: Hardening**

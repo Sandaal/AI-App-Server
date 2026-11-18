@@ -8,9 +8,9 @@ Prove the core architecture end to end with the smallest useful slice.
 **Exit criteria:** on a standard VM (4 vCPU, 16 GB RAM, no GPU), a developer runs:
 
 ```bash
-aiws new knowledge-chat hr-bot
-cd hr-bot && aiws source add ./policies/
-aiws deploy
+aiapp new knowledge-chat hr-bot
+cd hr-bot && aiapp source add ./policies/
+aiapp deploy
 ```
 
 …and within 5 minutes has a working chat UI and API that answer questions from their documents, with citations and streaming, using a hosted model. No external database, cache or queue.
@@ -18,17 +18,17 @@ aiws deploy
 **Out of scope for Phase 0:** guardrails beyond basic PII redaction, Kafka-like topics, multi-tenancy quotas, clustering, hardware abstraction, Node workers, the other 9 blueprints.
 
 ## 2. Process model
-One Go binary, `aiws`, with subcommands:
+One Go binary, `aiapp`, with subcommands:
 
 | Command | Role |
 |---|---|
-| `aiws serve` | Runs the server (core process) |
-| `aiws new / source / deploy / logs / apps` | Developer CLI; talks to a running server through its admin API |
+| `aiapp serve` | Runs the server (core process) |
+| `aiapp new / source / deploy / logs / apps` | Developer CLI; talks to a running server through its admin API |
 
 Shipping the CLI and server as one binary keeps installation to a single download.
 
 ```
-                 ┌──────────────────────── aiws serve (Go) ────────────────────────┐
+                 ┌──────────────────────── aiapp serve (Go) ────────────────────────┐
  HTTP/SSE  ───►  │ Listener → Router → Pipeline (auth, rate limit, PII) → App call │
  (apps, UI,      │                                         │                       │
   admin API)     │   Model gateway   Storage (KV, vectors, files)   Supervisor     │
@@ -36,7 +36,7 @@ Shipping the CLI and server as one binary keeps installation to a single downloa
                             │  host calls (gRPC)                          │ spawns, health-checks
                             │                                             ▼
                  ┌──────────┴──────────── Python worker (per app) ──────────────────┐
-                 │  aiws SDK runtime  →  developer handler code (handlers.py)        │
+                 │  aiapp SDK runtime  →  developer handler code (handlers.py)        │
                  └───────────────────────────────────────────────────────────────────┘
 ```
 
@@ -58,12 +58,12 @@ Shipping the CLI and server as one binary keeps installation to a single downloa
 - **Streaming:** `Invoke` is server-streaming, so handlers can `yield` tokens.
 - **Language-neutral:** nothing Python-specific in the contract, so a Node runtime can implement the same `Worker` service in Phase 2.
 
-Contract: [`core/proto/aiws/v1/worker.proto`](../../core/proto/aiws/v1/worker.proto).
+Contract: [`core/proto/aiapp/v1/worker.proto`](../../core/proto/aiapp/v1/worker.proto).
 
 ### Worker lifecycle
 | Stage | Behavior |
 |---|---|
-| Spawn | Supervisor starts `python -m aiws.runtime --socket … --app …` in the app's virtualenv |
+| Spawn | Supervisor starts `python -m aiapp.runtime --socket … --app …` in the app's virtualenv |
 | Ready | Worker calls `Host.Register`; core marks it idle |
 | Health | Core calls `Worker.Health` every 5 s; 3 failures → kill and respawn |
 | Timeout | Per-invoke deadline (default 120 s) → cancel; repeated timeouts → respawn |
@@ -103,11 +103,11 @@ ui: chat-widget                   # built-in JS widget, or ./ui
 workers: 2
 ```
 
-Secrets (API keys) are never in the manifest. They're set with `aiws secret set AZURE_OPENAI_KEY` and stored encrypted by the core.
+Secrets (API keys) are never in the manifest. They're set with `aiapp secret set AZURE_OPENAI_KEY` and stored encrypted by the core.
 
 ## 6. Python SDK (developer view)
 ```python
-from aiws import app, Request
+from aiapp import app, Request
 
 @app.route("/chat", stream=True)
 async def chat(req: Request):
@@ -144,7 +144,7 @@ Data directory: `./data/` by default, `--data-dir` to override.
 ## 9. Go code layout
 ```
 core/
-  cmd/aiws/            # main: serve + CLI subcommands
+  cmd/aiapp/            # main: serve + CLI subcommands
   internal/server/     # listener, router, SSE
   internal/pipeline/   # auth, rate limit, PII, logging stages
   internal/apps/       # manifest parsing, registry, deploy/versioning
@@ -153,8 +153,8 @@ core/
   internal/models/     # provider adapters, fallback, accounting
   internal/storage/    # interfaces + pebble, flatvec, blob, logstore
   internal/ingest/     # loaders (pdf, docx, md, txt), chunking, embedding
-  proto/aiws/v1/       # worker.proto
-sdk/python/aiws/       # runtime + developer SDK
+  proto/aiapp/v1/       # worker.proto
+sdk/python/aiapp/       # runtime + developer SDK
 blueprints/knowledge-chat/
 sdk/js/chat-widget/    # minimal streaming chat UI
 ```
@@ -164,10 +164,10 @@ Go module: `github.com/Sandaal/AI-App-Server`.
 ## 10. Milestones
 | # | Milestone | Done when |
 |---|---|---|
-| M0.1 | Skeleton | `aiws serve` starts, serves `/health`, loads one manifest. **Done 2026-11-18** except YAML manifest loading (M0.1b), which needs the first external Go dependency |
+| M0.1 | Skeleton | `aiapp serve` starts, serves `/health`, loads one manifest. **Done 2026-11-18** except YAML manifest loading (M0.1b), which needs the first external Go dependency |
 | M0.2 | Worker protocol | Echo handler in Python streams through core to an SSE client; crash → respawn works |
 | M0.3 | Model gateway | Handler streams a real Azure OpenAI / OpenAI response with token logging |
-| M0.4 | Storage + ingestion | `aiws source add` chunks and embeds PDFs/DOCX/MD into the built-in vector index |
+| M0.4 | Storage + ingestion | `aiapp source add` chunks and embeds PDFs/DOCX/MD into the built-in vector index |
 | M0.5 | Knowledge-chat blueprint | Chat widget answers with citations; full flow under 5 minutes on a clean VM |
 
 ## 11. Decisions (2026-11-18)

@@ -8,19 +8,19 @@ An application server for AI. Developers build AI apps in **Python** and **JavaS
 Deploy the top 10 AI use cases in minutes through built-in blueprints.
 
 ```bash
-aiws new knowledge-chat my-hr-bot
-aiws source add ./hr-policies/
-aiws deploy
+aiapp new knowledge-chat my-hr-bot
+aiapp source add ./hr-policies/
+aiapp deploy
 ```
 
 ## Try the skeleton
 Requires Go 1.24+ (Linux or macOS).
 
 ```bash
-go build -o bin/aiws ./core/cmd/aiws
-./bin/aiws serve --data-dir ./data      # public API on 127.0.0.1:8080
+go build -o bin/aiapp ./core/cmd/aiapp
+./bin/aiapp serve --data-dir ./data      # public API on 127.0.0.1:8080
 curl 127.0.0.1:8080/health
-./bin/aiws apps --data-dir ./data       # CLI talks to the server over a local socket
+./bin/aiapp apps --data-dir ./data       # CLI talks to the server over a local socket
 ```
 
 ## Repository layout
@@ -30,7 +30,7 @@ curl 127.0.0.1:8080/health
 | `sdk/python/` | Python SDK and worker runtime for server-side apps |
 | `sdk/js/` | JavaScript/TypeScript client SDK and UI components |
 | `blueprints/` | Top-10 use-case app templates |
-| `cli/` | `aiws` command-line tool |
+| `cli/` | `aiapp` command-line tool |
 | `docs/` | Strategy, architecture and decision records |
 
 ## Key decisions
