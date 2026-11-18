@@ -137,6 +137,8 @@ Developer flow: `aiapp new <blueprint> <name>` → `aiapp source add <data>` →
 - DPU offload; CXL memory tiers; GPU/LPU-aware routing; confidential computing and attestation.
 - Exit: measurable gains on next-generation hardware with no app code changes.
 
+Delivery plan: [roadmap](roadmap.md) (v0.5 with 3 blueprints and design partners before full Phase 1; see ADR 0003).
+
 Detailed designs: [Phase 0](design/phase0.md) · [Phase 1](design/phase1.md) · [Phase 2](design/phase2.md) · [Phase 3](design/phase3.md).
 
 ## 10. Cost strategy

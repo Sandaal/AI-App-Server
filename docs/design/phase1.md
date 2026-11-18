@@ -168,7 +168,9 @@ Local filesystem, SharePoint/OneDrive (Microsoft Graph), Azure Blob, Amazon S3, 
 | Guardrail false positives frustrate developers | Per-app tuning, dry-run mode that logs without blocking |
 | Windows differences (sockets, process control) | Windows CI from M1.1, not at the end |
 
-## 16. Open questions
-1. Admin console scope in v1: read-only dashboards, or full management?
-2. Default embedding model when an app doesn't specify one.
-3. Telemetry default: off by default, or opt-out anonymous usage metrics?
+## 16. Decisions (ADR 0003)
+1. Admin console in v1: read-only dashboards; management through the CLI.
+2. Default embedding model: none built in; `aiapp new` asks once and writes it to the manifest.
+3. Telemetry: off by default, opt-in only.
+
+**Delivery note:** Phase 1 ships first as **v0.5** (Knowledge chat, Document extraction, Workflow agent), then the remaining blueprints in the order design partners ask for. See [roadmap](../roadmap.md).

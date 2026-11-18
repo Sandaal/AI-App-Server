@@ -113,7 +113,9 @@ Connects application memory (sessions, conversation history, retrieved context) 
 | Access to Vera Rubin-class hardware | Cloud early access for M2.9; emulated profiles for everything before it |
 | RESP compatibility expectations | Publish the supported command list; conformance tests against common clients |
 
-## 10. Open questions
-1. Minimum cluster size: allow 2 nodes plus a witness, or require 3?
-2. Should the Kubernetes operator be part of M2.3 or a separate Phase 2.x deliverable?
-3. Local inference licensing: which open-weight models to list in the registry by default.
+## 10. Decisions (ADR 0003)
+1. Minimum cluster size: 3 nodes; 2 nodes + witness considered later.
+2. Kubernetes operator: Phase 2.x, after core clustering.
+3. Default registry models: only open-weight models under permissive licenses.
+
+**Delivery note:** Phase 2 starts only when users need more than one node. See [roadmap](../roadmap.md).
