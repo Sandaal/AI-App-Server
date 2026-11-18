@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build aiapp",
+      "type": "shell",
+      "command": "go build -o bin/aiapp ./core/cmd/aiapp",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$go"]
+    },
+    {
+      "label": "Test all",
+      "type": "shell",
+      "command": "go test -race -count=1 ./...",
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": ["$go"]
+    },
+    {
+      "label": "Check server health",
+      "type": "shell",
+      "command": "curl -s http://127.0.0.1:8080/health",
+      "problemMatcher": []
+    }
+  ]
+}

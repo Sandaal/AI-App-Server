@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "aiapp serve",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/core/cmd/aiapp",
+      "args": ["serve", "--addr", "127.0.0.1:8080", "--data-dir", "${workspaceFolder}/data", "--log-level", "debug"]
+    },
+    {
+      "name": "aiapp apps (needs a running server)",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/core/cmd/aiapp",
+      "args": ["apps", "--data-dir", "${workspaceFolder}/data"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Debug current package tests",
+      "type": "go",
+      "request": "launch",
+      "mode": "test",
+      "program": "${fileDirname}"
+    }
+  ]
+}
