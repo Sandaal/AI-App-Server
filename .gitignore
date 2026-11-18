@@ -1,0 +1,23 @@
+# Go
+/bin/
+*.exe
+*.test
+*.out
+vendor/
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+# JS
+node_modules/
+dist/
+# Local data / secrets
+/data/
+.env
+*.local.yaml
+# OS / editors
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
