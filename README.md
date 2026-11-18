@@ -2,7 +2,7 @@
 
 An application server for AI. Developers build AI apps in **Python** and **JavaScript/TypeScript**, deploy them like web apps, and the server provides every runtime service those apps need: model access, memory, cache, events, vectors, security, guardrails, observability and deployment, in one binary that runs on any hardware.
 
-> Status: Phase 0 in progress. Milestone M0.1 (server skeleton) is in place.
+> Status: Phase 0 in progress. Built: server skeleton (M0.1), model gateway (M0.3), blob store, vector index and log store (part of M0.4). Next: YAML manifests, worker protocol (M0.2), Pebble KV.
 
 ## Initial goal
 Deploy the top 10 AI use cases in minutes through built-in blueprints.

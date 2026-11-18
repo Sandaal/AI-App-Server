@@ -132,7 +132,7 @@ Every `app.*` call is a host call to the core. The same code runs unchanged whet
 | Need | Phase 0 implementation | Phase 1 upgrade |
 |---|---|---|
 | KV, sessions, conversation memory | Pebble (embedded LSM) | Data structures, TTL, quotas |
-| Vectors | Flat (exact) index in memory, persisted to Pebble; fine up to ~100K chunks | HNSW, memory-mapped, hybrid search |
+| Vectors | Flat (exact) index in memory, persisted as an atomic snapshot file; ~170 ms/query at 100K × 1536-dim on one core, so best below ~10–20K chunks | HNSW, memory-mapped, hybrid search |
 | Files / sources | Local content-addressed store | Same, plus encryption at rest |
 | Audit / request log | Append-only JSON-lines segments with rotation | Segment format shared with event topics |
 | Ingestion jobs | In-process goroutine queue | Durable job queue |
@@ -166,8 +166,8 @@ Go module: `github.com/Sandaal/AI-App-Server`.
 |---|---|---|
 | M0.1 | Skeleton | `aiapp serve` starts, serves `/health`, loads one manifest. **Done 2026-11-18** except YAML manifest loading (M0.1b), which needs the first external Go dependency |
 | M0.2 | Worker protocol | Echo handler in Python streams through core to an SSE client; crash → respawn works |
-| M0.3 | Model gateway | Handler streams a real Azure OpenAI / OpenAI response with token logging |
-| M0.4 | Storage + ingestion | `aiapp source add` chunks and embeds PDFs/DOCX/MD into the built-in vector index |
+| M0.3 | Model gateway | Handler streams a real Azure OpenAI / OpenAI response with token logging. **Gateway built 2026-11-18** (OpenAI, Azure OpenAI, Anthropic, OpenAI-compatible; streaming, embeddings, retry, fallback, cost); wiring to handlers follows M0.2 |
+| M0.4 | Storage + ingestion | `aiapp source add` chunks and embeds PDFs/DOCX/MD into the built-in vector index. **Built 2026-11-18:** storage interfaces, blob store, flat vector index, log store. Remaining: Pebble KV, ingestion |
 | M0.5 | Knowledge-chat blueprint | Chat widget answers with citations; full flow under 5 minutes on a clean VM |
 
 ## 11. Decisions (2026-11-18)
