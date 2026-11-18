@@ -30,3 +30,6 @@ aiws deploy
 - Independent: no dependency on any vendor agent framework; provider- and hardware-neutral
 
 See [docs/strategy.md](docs/strategy.md) for the full product strategy and [docs/adr/](docs/adr/) for decision records.
+
+## License
+Apache License 2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE). Contributions are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).
