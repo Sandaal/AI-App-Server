@@ -164,14 +164,14 @@ Go module: `github.com/Sandaal/AI-App-Server`.
 ## 10. Milestones
 | # | Milestone | Done when |
 |---|---|---|
-| M0.1 | Skeleton | `aiws serve` starts, serves `/health`, loads one manifest |
+| M0.1 | Skeleton | `aiws serve` starts, serves `/health`, loads one manifest. **Done 2026-11-18** except YAML manifest loading (M0.1b), which needs the first external Go dependency |
 | M0.2 | Worker protocol | Echo handler in Python streams through core to an SSE client; crash → respawn works |
 | M0.3 | Model gateway | Handler streams a real Azure OpenAI / OpenAI response with token logging |
 | M0.4 | Storage + ingestion | `aiws source add` chunks and embeds PDFs/DOCX/MD into the built-in vector index |
 | M0.5 | Knowledge-chat blueprint | Chat widget answers with citations; full flow under 5 minutes on a clean VM |
 
-## 11. Open design questions
-1. **Python environment management:** one virtualenv per app (isolated, slower first deploy) vs a shared environment (fast, dependency conflicts). Proposal: per-app venv, cached by `requirements.txt` hash; use `uv` for speed.
-2. **Document parsing:** pure-Go loaders vs doing parsing inside a Python worker (better libraries). Proposal: parse in a built-in Python "system worker" for Phase 0.
-3. **Windows support in Phase 0** or Linux/macOS only until Phase 1.
-4. **Admin API auth** for the CLI: local socket only in Phase 0, tokens in Phase 1.
+## 11. Decisions (2026-11-18)
+1. **Python environments:** one virtualenv per app, cached by `requirements.txt` hash, created with `uv`.
+2. **Document parsing:** done in a built-in Python "system worker" in Phase 0.
+3. **Platforms:** Linux and macOS in Phase 0; Windows support in Phase 1.
+4. **Admin API auth:** local Unix socket only in Phase 0; token auth in Phase 1.

@@ -2,7 +2,7 @@
 
 An application server for AI. Developers build AI apps in **Python** and **JavaScript/TypeScript**, deploy them like web apps, and the server provides every runtime service those apps need: model access, memory, cache, events, vectors, security, guardrails, observability and deployment, in one binary that runs on any hardware.
 
-> Status: design phase (Phase 0). No runnable code yet.
+> Status: Phase 0 in progress. Milestone M0.1 (server skeleton) is in place.
 
 ## Initial goal
 Deploy the top 10 AI use cases in minutes through built-in blueprints.
@@ -11,6 +11,16 @@ Deploy the top 10 AI use cases in minutes through built-in blueprints.
 aiws new knowledge-chat my-hr-bot
 aiws source add ./hr-policies/
 aiws deploy
+```
+
+## Try the skeleton
+Requires Go 1.24+ (Linux or macOS).
+
+```bash
+go build -o bin/aiws ./core/cmd/aiws
+./bin/aiws serve --data-dir ./data      # public API on 127.0.0.1:8080
+curl 127.0.0.1:8080/health
+./bin/aiws apps --data-dir ./data       # CLI talks to the server over a local socket
 ```
 
 ## Repository layout
