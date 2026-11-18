@@ -29,7 +29,7 @@ aiws deploy
 - Runs fully on standard servers; uses next-generation AI hardware when present
 - Independent: no dependency on any vendor agent framework; provider- and hardware-neutral
 
-See [docs/strategy.md](docs/strategy.md) for the full product strategy and [docs/adr/](docs/adr/) for decision records.
+See [docs/strategy.md](docs/strategy.md) for the full product strategy, [docs/design/phase0.md](docs/design/phase0.md) for the Phase 0 design, and [docs/adr/](docs/adr/) for decision records.
 
 ## License
 Apache License 2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE). Contributions are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).

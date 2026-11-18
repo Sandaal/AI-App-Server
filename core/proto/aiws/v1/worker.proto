@@ -1,0 +1,214 @@
+// AI App Server worker protocol, v1 (Phase 0 draft).
+//
+// Two services:
+//   Worker - served by each app runtime process (Python in v1, Node in v2). The core calls it.
+//   Host   - served by the core. App runtimes call it for models, storage and logging.
+//
+// The contract is language-neutral: nothing here assumes Python.
+
+syntax = "proto3";
+
+package aiws.v1;
+
+option go_package = "github.com/Sandaal/AI-App-Server/core/proto/aiws/v1;aiwsv1";
+
+import "google/protobuf/struct.proto";
+
+// ---------------------------------------------------------------------------
+// Worker service (core -> runtime)
+// ---------------------------------------------------------------------------
+
+service Worker {
+  // Run a route handler. Streams output chunks back to the core.
+  rpc Invoke(InvokeRequest) returns (stream InvokeChunk);
+  // Liveness/readiness probe.
+  rpc Health(HealthRequest) returns (HealthResponse);
+  // Ask the worker to finish in-flight work and exit (used during deploys).
+  rpc Drain(DrainRequest) returns (DrainResponse);
+}
+
+message InvokeRequest {
+  string invocation_id = 1;    // unique per call; echoed in host calls for tracing
+  string route = 2;            // e.g. "/chat"
+  string handler = 3;          // e.g. "handlers:chat"
+  string method = 4;           // HTTP method
+  map<string, string> headers = 5;
+  bytes body = 6;              // raw request body
+  string session_id = 7;       // conversation/session key, if any
+  Principal principal = 8;     // authenticated caller
+  int64 deadline_unix_ms = 9;
+}
+
+message Principal {
+  string subject = 1;          // user or API-key id
+  repeated string roles = 2;
+  map<string, string> claims = 3;
+}
+
+message InvokeChunk {
+  oneof kind {
+    ResponseStart start = 1;   // status + headers; sent once, first
+    bytes data = 2;            // body bytes or a streamed token
+    ResponseEnd end = 3;       // sent once, last
+    Error error = 4;           // terminal error
+  }
+}
+
+message ResponseStart {
+  int32 status = 1;
+  map<string, string> headers = 2;
+  bool streaming = 3;          // true -> core forwards data chunks as SSE
+}
+
+message ResponseEnd {
+  google.protobuf.Struct metadata = 1;   // e.g. citations, usage summary
+}
+
+message Error {
+  string code = 1;             // e.g. "handler_exception", "timeout"
+  string message = 2;
+  bool retryable = 3;
+}
+
+message HealthRequest {}
+message HealthResponse {
+  bool ready = 1;
+  int32 in_flight = 2;
+}
+
+message DrainRequest { int32 grace_seconds = 1; }
+message DrainResponse {}
+
+// ---------------------------------------------------------------------------
+// Host service (runtime -> core)
+// ---------------------------------------------------------------------------
+
+service Host {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+
+  // Models
+  rpc ChatStream(ChatRequest) returns (stream ChatChunk);
+  rpc Embed(EmbedRequest) returns (EmbedResponse);
+
+  // Key-value / memory
+  rpc KVGet(KVGetRequest) returns (KVGetResponse);
+  rpc KVPut(KVPutRequest) returns (KVPutResponse);
+  rpc KVDelete(KVDeleteRequest) returns (KVDeleteResponse);
+
+  // Vectors
+  rpc VectorSearch(VectorSearchRequest) returns (VectorSearchResponse);
+  rpc VectorUpsert(VectorUpsertRequest) returns (VectorUpsertResponse);
+
+  // Logging / tracing
+  rpc Log(LogRequest) returns (LogResponse);
+}
+
+message RegisterRequest {
+  string app = 1;
+  string app_version = 2;
+  string worker_id = 3;
+  string runtime = 4;          // e.g. "python3.12"
+  string sdk_version = 5;
+}
+message RegisterResponse {
+  string session_token = 1;    // must accompany every later host call (gRPC metadata)
+}
+
+// --- Models ---
+
+message ChatMessage {
+  string role = 1;             // system | user | assistant | tool
+  string content = 2;
+  string name = 3;
+}
+
+message ChatRequest {
+  string invocation_id = 1;
+  string model = 2;            // logical name from the manifest, e.g. "chat"
+  repeated ChatMessage messages = 3;
+  google.protobuf.Struct options = 4;   // temperature, max_tokens, tools, response_format...
+}
+
+message ChatChunk {
+  oneof kind {
+    string delta = 1;          // streamed text
+    google.protobuf.Struct tool_call = 2;
+    Usage usage = 3;           // sent once at the end
+    Error error = 4;
+  }
+}
+
+message Usage {
+  int64 input_tokens = 1;
+  int64 output_tokens = 2;
+  string provider = 3;
+  string resolved_model = 4;   // actual model used (after fallback)
+  double cost_usd = 5;
+}
+
+message EmbedRequest {
+  string invocation_id = 1;
+  string model = 2;            // logical name, e.g. "embedding"
+  repeated string inputs = 3;
+}
+message EmbedResponse {
+  repeated Vector vectors = 1;
+  Usage usage = 2;
+}
+message Vector { repeated float values = 1; }
+
+// --- Key-value ---
+
+message KVGetRequest { string namespace = 1; string key = 2; }
+message KVGetResponse { bool found = 1; bytes value = 2; }
+
+message KVPutRequest {
+  string namespace = 1;
+  string key = 2;
+  bytes value = 3;
+  int64 ttl_seconds = 4;       // 0 = no expiry
+}
+message KVPutResponse {}
+
+message KVDeleteRequest { string namespace = 1; string key = 2; }
+message KVDeleteResponse {}
+
+// --- Vectors ---
+
+message VectorSearchRequest {
+  string collection = 1;       // e.g. "sources"
+  string query_text = 2;       // core embeds it, or
+  Vector query_vector = 3;     // caller supplies the vector
+  int32 k = 4;
+  google.protobuf.Struct filter = 5;
+}
+message VectorSearchResponse { repeated VectorHit hits = 1; }
+
+message VectorHit {
+  string id = 1;
+  float score = 2;
+  string text = 3;
+  google.protobuf.Struct metadata = 4;  // source path, page, chunk index...
+}
+
+message VectorUpsertRequest {
+  string collection = 1;
+  repeated VectorRecord records = 2;
+}
+message VectorRecord {
+  string id = 1;
+  string text = 2;
+  Vector vector = 3;           // optional: core embeds text if omitted
+  google.protobuf.Struct metadata = 4;
+}
+message VectorUpsertResponse { int32 upserted = 1; }
+
+// --- Logging ---
+
+message LogRequest {
+  string invocation_id = 1;
+  string level = 2;            // debug | info | warn | error
+  string message = 3;
+  google.protobuf.Struct fields = 4;
+}
+message LogResponse {}
