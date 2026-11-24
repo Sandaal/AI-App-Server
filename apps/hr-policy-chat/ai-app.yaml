@@ -1,0 +1,21 @@
+app: hr-policy-chat
+version: 0.1.0
+blueprint: knowledge-chat   # streaming chat over your documents, with citations
+runtime: python3.12
+
+models:
+  chat:      { provider: openai, model: gpt-4o-mini }
+  embedding: { provider: openai, model: text-embedding-3-small }
+
+# Folders and files to index (.md .txt .pdf .docx). Add more with: aiapp source add PATH
+sources: [{ path: ./policies/ }]
+
+guardrails:
+  - pii-redaction              # redact emails, phone and card numbers before they reach the model
+  - prompt-injection           # refuse messages that try to override the instructions
+  # - output-pii               # redact them in answers too
+  # - citations-required: { routes: [/chat] }   # withhold answers the documents don't support
+  # - blocked-topics: { topics: [{ name: legal advice, keywords: [lawsuit, sue] }] }
+# guardrail_mode: dry-run      # log guardrail decisions without applying them, while tuning
+ui: chat-widget                # chat page at /apps/hr-policy-chat/
+workers: 2

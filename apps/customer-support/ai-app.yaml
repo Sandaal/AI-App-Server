@@ -1,0 +1,30 @@
+app: customer-support
+version: 0.1.0
+blueprint: customer-support   # answers from docs/, acts with tools.py, hands off to a person
+runtime: python3.12
+
+models:
+  chat:      { provider: openai, model: gpt-4o-mini }
+  embedding: { provider: openai, model: text-embedding-3-small }
+
+# Folders and files the assistant answers from. Add more with: aiapp source add PATH
+sources: [{ path: ./docs/ }]
+
+support:
+  instructions: >
+    You are the support assistant for an online shop. Be friendly and brief. Answer general
+    questions (delivery, returns, opening hours) from the documentation. Only when the customer
+    gives an order number, look the order up with the tools before answering about it.
+  approval_required: [refund_order]   # refunds wait for a person: aiapp approve, or /apps/customer-support/_approvals/
+  approval_timeout: 24h
+  # handoff_topic: support.handoffs   # where handoffs go (consume them with a subscription or aiapp topics)
+
+guardrails:
+  - pii-redaction              # redact emails, phone and card numbers before they reach the model
+  - prompt-injection           # refuse messages that try to override the instructions
+  # - output-pii               # redact them in answers too
+  # - citations-required: { routes: [/chat] }   # withhold answers the documents don't support
+  # - blocked-topics: { topics: [{ name: legal advice, keywords: [lawsuit, sue] }] }
+# guardrail_mode: dry-run      # log guardrail decisions without applying them, while tuning
+ui: chat-widget                # chat page at /apps/customer-support/
+workers: 2

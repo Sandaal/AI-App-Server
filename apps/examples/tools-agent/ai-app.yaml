@@ -1,0 +1,10 @@
+# Let the model call your Python functions (tools) until it can answer.
+app: tools-agent
+version: "1"
+models:
+  chat: { provider: openai, model: gpt-4o-mini }
+routes:
+  - { path: /ask, handler: "handlers:ask" }
+# Tools from MCP servers can be added too:
+# mcp:
+#   - { name: files, command: [npx, -y, "@modelcontextprotocol/server-filesystem", ./data] }

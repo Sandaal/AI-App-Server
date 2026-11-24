@@ -1,0 +1,9 @@
+# Golden documents: aiapp eval uploads each file and checks the extracted fields.
+route: /extract
+cases:
+  - name: sample invoice
+    file: samples/invoice.txt
+    query: { wait: "60" }
+    expect:
+      json: { state: done, result.data.total: 1730.5 }
+      contains: ["Northwind"]

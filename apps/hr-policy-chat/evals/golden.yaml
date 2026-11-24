@@ -1,0 +1,18 @@
+# Golden questions: aiapp eval runs them against the deployed app with its real
+# models and compares each run with the previous one (--min-pass, --no-regress for CI).
+cases:
+  - name: annual leave
+    input: How many days of paid annual leave do employees get?
+    expect:
+      contains: ["25"]
+      citations: { min: 1 }
+      judge: States that employees get 25 days of paid annual leave per year.
+  - name: carry-over
+    input: Can unused leave days be carried over to the next year?
+    expect:
+      contains: ["5"]
+      citations: { min: 1 }
+  - name: not in the documents
+    input: What is the parking reimbursement for contractors?
+    expect:
+      judge: Says the documents don't cover this, instead of inventing a policy.

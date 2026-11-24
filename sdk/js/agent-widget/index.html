@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent</title>
+<style>
+  :root {
+    --bg: #f7f7f8; --panel: #ffffff; --text: #1f2328; --muted: #656d76; --border: #d0d7de;
+    --accent: #2f6feb; --ok: #1a7f37; --bad: #cf222e; --warn: #9a6700; --chip: #eef1f4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --panel: #161b22; --text: #e6edf3; --muted: #8d96a0; --border: #30363d;
+      --accent: #4c8dff; --ok: #3fb950; --bad: #ff7b72; --warn: #d29922; --chip: #21262d;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 20px 16px 40px; }
+  header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  h1 { font-size: 18px; margin: 0; }
+  a { color: var(--accent); }
+  textarea { width: 100%; min-height: 80px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--panel); color: var(--text); font: inherit; resize: vertical; }
+  button { margin-top: 8px; border: 0; border-radius: 8px; padding: 8px 18px; background: var(--accent); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+  .run { margin-top: 18px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .run h2 { font-size: 15px; margin: 0 0 6px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; overflow-wrap: anywhere; }
+  .state { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--chip); color: var(--muted); }
+  .state.done { color: var(--ok); } .state.dead, .state.error { color: var(--bad); } .state.waiting { color: var(--warn); }
+  .answer { margin: 10px 0 4px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  ol { margin: 10px 0 0; padding-left: 20px; }
+  li { margin: 6px 0; font-size: 14px; overflow-wrap: anywhere; }
+  .kind { font-weight: 600; } .muted { color: var(--muted); }
+  code, pre { font: 12.5px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  pre { white-space: pre-wrap; background: var(--chip); padding: 6px 8px; border-radius: 6px; margin: 4px 0 0; }
+  .err { color: var(--bad); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1 id="title">Agent</h1>
+    <a href="_approvals/" id="approvals">Approvals</a>
+  </header>
+  <textarea id="task" placeholder="Describe the task, e.g. “Customer 1042 says order A-1001 never arrived. Check it and refund if appropriate.”" aria-label="Task"></textarea>
+  <button id="go" type="button">Run</button>
+  <div id="runs"></div>
+</main>
+<script>
+(() => {
+  "use strict";
+  const app = location.pathname.split("/")[2] || "app";
+  const $ = (id) => document.getElementById(id);
+  document.title = $("title").textContent = app;
+  const store = {
+    get(k) { try { return localStorage.getItem(app + ":" + k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(app + ":" + k, v); } catch {} },
+  };
+  const el = (tag, cls, text) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  };
+
+  async function call(url, opts = {}) {
+    const headers = Object.assign({}, opts.headers);
+    const key = store.get("key");
+    if (key) headers["Authorization"] = "Bearer " + key;
+    const resp = await fetch(url, Object.assign({}, opts, { headers }));
+    if (resp.status === 401) {
+      const k = prompt("This app needs an API key:");
+      if (!k) throw new Error("An API key is required.");
+      store.set("key", k.trim());
+      return call(url, opts);
+    }
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok && resp.status !== 202) throw new Error(data.error || "The server returned " + resp.status + ".");
+    return data;
+  }
+
+  function step(s) {
+    const li = el("li");
+    if (s.type === "model") {
+      li.append(el("span", "kind", "Model "));
+      if (s.text) li.append(document.createTextNode(s.text + " "));
+      for (const c of s.calls || []) li.append(el("pre", "", "→ " + c.tool + " " + JSON.stringify(c.arguments)));
+    } else if (s.type === "tool") {
+      li.append(el("span", "kind", (s.error ? "Tool failed " : "Tool ") + s.tool + " "));
+      li.append(el("pre", s.error ? "err" : "", s.result));
+    } else if (s.type === "approval") {
+      li.append(el("span", "kind", "Approval for " + s.tool + ": "));
+      li.append(document.createTextNode(s.state + (s.by ? " by " + s.by : "") + (s.comment ? " — " + s.comment : "")));
+    }
+    return li;
+  }
+
+  function show(ui, run) {
+    ui.st.textContent = run.state;
+    ui.st.className = "state " + run.state;
+    ui.body.textContent = "";
+    if (run.state === "waiting") {
+      const p = el("p", "muted");
+      p.append(document.createTextNode("Waiting for a person to approve a step. "));
+      const a = el("a", "", "Open approvals");
+      a.href = "_approvals/";
+      p.append(a);
+      ui.body.append(p);
+    } else if (run.state === "queued" || run.state === "running") {
+      ui.body.append(el("p", "muted", "Working…"));
+    }
+    if (run.answer) ui.body.append(el("div", "answer", run.answer));
+    if (run.error) ui.body.append(el("div", "err", run.error));
+    if (run.history && run.history.length) {
+      const ol = el("ol");
+      run.history.forEach((s) => ol.append(step(s)));
+      ui.body.append(ol);
+    }
+  }
+
+  async function go() {
+    const task = $("task").value.trim();
+    if (!task) return;
+    $("go").disabled = true;
+    const card = el("div", "run");
+    const h = el("h2");
+    h.append(el("span", "", task.length > 90 ? task.slice(0, 90) + "…" : task));
+    const st = el("span", "state", "queued");
+    h.append(st);
+    const body = el("div");
+    card.append(h, body);
+    $("runs").prepend(card);
+    const ui = { st, body };
+    try {
+      let run = await call("run?wait=5", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ task }) });
+      show(ui, run);
+      $("task").value = "";
+      while (run.state === "queued" || run.state === "running" || run.state === "waiting") {
+        await new Promise((r) => setTimeout(r, run.state === "waiting" ? 4000 : 1500));
+        run = await call("run?id=" + encodeURIComponent(run.job));
+        show(ui, run);
+      }
+    } catch (err) {
+      st.textContent = "error"; st.className = "state error";
+      body.textContent = "";
+      body.append(el("div", "err", err.message));
+    } finally {
+      $("go").disabled = false;
+    }
+  }
+  $("go").addEventListener("click", go);
+  $("task").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) go(); });
+})();
+</script>
+</body>
+</html>

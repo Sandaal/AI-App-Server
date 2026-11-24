@@ -1,0 +1,9 @@
+INVOICE  #INV-2027-0042
+Northwind Traders Ltd, 12 Harbour Road, Bristol
+Date: 3 January 2027        Due: 2 February 2027
+
+Description                 Qty    Amount
+Consulting (January)         10    1,500.00
+Travel expenses               1      230.50
+
+TOTAL DUE                    GBP   1,730.50

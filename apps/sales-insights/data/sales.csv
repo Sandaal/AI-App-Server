@@ -1,0 +1,9 @@
+order_id,date,region,product,quantity,total
+1001,2026-01-14,North,Espresso machine,2,498.00
+1002,2026-01-20,South,Coffee grinder,5,445.00
+1003,2026-02-03,North,Coffee grinder,1,89.00
+1004,2026-02-17,West,Espresso machine,3,747.00
+1005,2026-03-02,South,Milk frother,10,290.00
+1006,2026-03-21,West,Coffee grinder,2,178.00
+1007,2026-04-05,North,Espresso machine,1,249.00
+1008,2026-04-18,South,Espresso machine,4,996.00

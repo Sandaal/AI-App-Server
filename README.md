@@ -42,8 +42,13 @@ cd hr-bot && aiapp source add ./policies/ && aiapp deploy
 
 Next: the [quickstart](https://sandaal.github.io/aiapp-server/get-started/quickstart/).
 
+## Example apps and source
+
+- **[`apps/`](apps/):** complete, tested apps for ten use cases (HR chat, customer support, invoice extraction, ticket triage, meeting notes, data insights, an ops agent…) and examples of each extension point. Copy one, change it, and `aiapp deploy` it to your own server.
+- **[`sdk/`](sdk/):** the source of the Python SDK (including how each blueprint works, in `sdk/python/aiapp/blueprints/`) and of the JavaScript client and web components.
+
 ## This repository
 
-This repository holds the releases, the documentation site (`docs/`), the deployment templates (`deploy/`) and the `ai-app.yaml` JSON Schema (`schema/`). Questions and bug reports are welcome as [issues](https://github.com/Sandaal/aiapp-server/issues); for security issues see [SECURITY.md](SECURITY.md).
+This repository also holds the releases, the documentation site (`docs/`), the deployment templates (`deploy/`) and the `ai-app.yaml` JSON Schema (`schema/`). The server itself is distributed as binaries and the Docker image. Questions and bug reports are welcome as [issues](https://github.com/Sandaal/aiapp-server/issues); for security issues see [SECURITY.md](SECURITY.md).
 
 Licensed under the [Apache License 2.0](LICENSE).

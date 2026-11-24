@@ -1,0 +1,29 @@
+app: ops-agent
+version: 0.1.0
+blueprint: workflow-agent   # give it a task; it uses tools and asks a person before sensitive ones
+runtime: python3.12
+
+models:
+  chat:      { provider: openai, model: gpt-4o-mini }
+
+agent:
+  instructions: >
+    You are the support agent for an online shop. Look up the facts with the tools before
+    answering, refund only when the order is genuinely lost or damaged, and finish with a
+    one-paragraph summary for the customer.
+  max_steps: 10
+  approval_required: [refund_order]   # these wait for: aiapp approve, or /apps/ops-agent/_approvals/
+  approval_timeout: 24h
+
+# Publish tools to outside agents (Claude, Copilot, IDEs) at /apps/ops-agent/mcp; tools that need
+# approval are never published. See: aiapp mcp
+# mcp_server:
+#   tools: [lookup_order, lookup_customer]
+#   roles: [mcp]                       # aiapp key create ops-agent --role mcp
+
+# Tools from MCP servers work too, e.g.:
+# mcp:
+#   - { name: files, command: [npx, -y, "@modelcontextprotocol/server-filesystem", ./data] }
+
+ui: agent-widget   # task page at /apps/ops-agent/
+workers: 2

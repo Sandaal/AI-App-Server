@@ -1,0 +1,17 @@
+app: meeting-notes
+version: 0.1.0
+blueprint: meeting-notes   # recordings or transcripts -> summary, decisions, action items
+runtime: python3.12
+
+models:
+  chat:      { provider: openai, model: gpt-4o-mini }
+  transcribe: { provider: openai, model: gpt-4o-transcribe }
+
+meeting_notes:
+  # language: en                       # transcription hint and notes language
+  vocabulary: [Contoso, Kubernetes]    # names and terms to spell correctly
+
+guardrails: [pii-redaction]   # redact emails, phone and card numbers before they reach the model
+ui: notes-widget               # upload page at /apps/meeting-notes/
+workers: 2
+job_concurrency: 2

@@ -1,0 +1,8 @@
+Priya: Thanks for joining. Two things today: the launch date and the support rota.
+Tom: Engineering is ready. The last blocker, the payment retry bug, was fixed on Monday.
+Priya: Then I propose we launch on the 14th of March. Any objections?
+Lena: None from marketing. I'll need the final screenshots by the 7th.
+Tom: I can send those by Thursday.
+Priya: Good, decided: launch on 14 March. Next, the support rota. Lena, can you draft it?
+Lena: Yes, I'll have a draft by Friday. One open question: do we cover weekends in the first month?
+Priya: Let's decide that next week once we see the forecast.

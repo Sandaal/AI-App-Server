@@ -1,0 +1,11 @@
+# Your own HTTP routes in Python: JSON in and out, a streamed answer,
+# conversation memory, and status codes.
+app: custom-routes
+version: "1"
+models:
+  chat: { provider: openai, model: gpt-4o-mini }
+routes:
+  - { path: /hello, handler: "handlers:hello" }                  # JSON in, JSON out
+  - { path: /translate, handler: "handlers:translate" }          # one model call
+  - { path: /chat, handler: "handlers:chat", stream: true }      # streamed, with memory
+guardrails: [pii-redaction, prompt-injection]

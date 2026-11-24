@@ -17,7 +17,8 @@ sources:                    # documents to answer from
   - path: ./policies/
   - { name: handbook, git: { url: "https://github.com/contoso/handbook", token: "${GITHUB_TOKEN}" }, schedule: 1h }
 
-routes:                     # your own HTTP routes (blueprints add theirs)
+routes:                     # your own HTTP routes; listing them replaces a blueprint's defaults,
+  - { path: /chat }           #   so list the blueprint's routes too (path only: the handler is filled in)
   - { path: /ask, handler: "handlers:ask", stream: true, roles: [staff] }
 
 jobs:                       # background work

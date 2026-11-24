@@ -1,0 +1,17 @@
+app: sales-insights
+version: 0.1.0
+blueprint: insights   # questions about data, answered with SQL the model writes (read-only)
+runtime: python3.12
+
+models:
+  chat:      { provider: openai, model: gpt-4o-mini }
+
+insights:
+  files: [./data/]   # CSV files, queried as SQLite tables named after the files
+  # databases:       # PostgreSQL or SQL Server, with a login that can only read:
+  #   - { name: sales, driver: postgres, dsn: "${SALES_DB}", tables: [orders, customers], max_rows: 200 }
+  instructions: "Amounts are in EUR. Quarters are calendar quarters."
+
+guardrails: [pii-redaction]   # redact emails, phone and card numbers before they reach the model
+ui: insights-widget            # ask questions at /apps/sales-insights/
+workers: 2

@@ -1,0 +1,16 @@
+app: document-summary
+version: 0.1.0
+blueprint: summarization   # summaries and key points of long documents, read in parts
+runtime: python3.12
+
+models:
+  chat:      { provider: openai, model: gpt-4o-mini }
+
+summary:
+  style: paragraph   # paragraph | bullets | executive
+  max_words: 250
+
+guardrails: [pii-redaction]   # redact emails, phone and card numbers before they reach the model
+ui: summary-widget             # upload page at /apps/document-summary/
+workers: 2
+job_concurrency: 2             # documents summarized at once

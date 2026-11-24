@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contoso help</title>
+  <!-- The client and web components, served by the server itself -->
+  <script type="module" src="/_sdk/aiapp.js"></script>
+  <style>
+    body { font: 16px system-ui, sans-serif; max-width: 760px; margin: 40px auto; padding: 0 16px; }
+    aiapp-chat { --aiapp-accent: #0b6e4f; --aiapp-height: 480px; }
+  </style>
+</head>
+<body>
+  <h1>Contoso help</h1>
+  <p id="tip">…</p>
+  <aiapp-chat app="own-web-page" heading="Ask us anything" placeholder="Ask about returns, refunds…"></aiapp-chat>
+
+  <script type="module">
+    // Your own route, through the same client the components use.
+    const { AIAppClient } = await import("/_sdk/aiapp.js");
+    const client = new AIAppClient({ app: "own-web-page", baseUrl: location.origin });
+    document.getElementById("tip").textContent = (await client.call("/tip")).tip;
+  </script>
+</body>
+</html>

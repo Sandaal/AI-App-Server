@@ -1,0 +1,12 @@
+# Golden texts: aiapp eval checks each label.
+route: /classify
+cases:
+  - name: double charge is billing
+    body: { text: "I was charged twice for my subscription this month." }
+    expect: { json: { label: billing } }
+  - name: login problem is account
+    body: { text: "I can't sign in, the password reset email never arrives." }
+    expect: { json: { label: account } }
+  - name: error is technical
+    body: { text: "The export button gives error 500 since this morning." }
+    expect: { json: { label: technical } }

@@ -1,0 +1,12 @@
+# A guardrail written in Python, next to two built-in ones.
+app: guardrail-plugin
+version: "1"
+models:
+  chat: { provider: openai, model: gpt-4o-mini }
+routes:
+  - { path: /ask, handler: "handlers:ask" }
+guardrails:
+  - prompt-injection                                          # built in
+  - no-competitors: { handler: "guards:competitors", stage: both, message: "I can only talk about Contoso products." }
+  - output-pii                                                # built in: redact emails and phone numbers in answers
+# guardrail_mode: dry-run    # log what the guardrails would do, without blocking, while you tune them

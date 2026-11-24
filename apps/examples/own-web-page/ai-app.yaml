@@ -1,0 +1,14 @@
+# Your own web page, served by the app, using the built-in web components
+# and your own route.
+app: own-web-page
+version: "1"
+models:
+  chat:      { provider: openai, model: gpt-4o-mini }
+  embedding: { provider: openai, model: text-embedding-3-small }
+blueprint: knowledge-chat          # gives the /chat route the page's chat box uses
+sources: [{ path: ./docs/ }]
+ui: ./ui                           # files in ui/ are served at /apps/own-web-page/
+routes:
+  - { path: /chat }                         # the blueprint's chat route (listing routes replaces the defaults, so keep it)
+  - { path: /tip, handler: "handlers:tip" }
+# Pages on another site need:  cors: { origins: ["https://intranet.contoso.com"] }

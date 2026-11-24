@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insights</title>
+<style>
+  :root {
+    --bg: #f7f7f8; --panel: #ffffff; --text: #1f2328; --muted: #656d76; --border: #d0d7de;
+    --accent: #2f6feb; --ok: #1a7f37; --error: #b42318; --chip: #eef1f4; --drop: #eef4ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --panel: #161b22; --text: #e6edf3; --muted: #8d96a0; --border: #30363d;
+      --accent: #4c8dff; --ok: #3fb950; --error: #ff7b72; --chip: #21262d; --drop: #132339;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 20px 16px 40px; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  p.sub { margin: 0 0 18px; color: var(--muted); }
+  #drop { border: 2px dashed var(--border); border-radius: 12px; padding: 28px 16px; text-align: center; background: var(--panel); cursor: pointer; }
+  #drop.over { border-color: var(--accent); background: var(--drop); }
+  #drop strong { color: var(--accent); }
+  details { margin: 12px 0 0; }
+  textarea { width: 100%; min-height: 110px; margin-top: 8px; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--panel); color: var(--text); font: inherit; }
+  button { margin-top: 8px; border: 0; border-radius: 8px; padding: 8px 16px; background: var(--accent); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+  .card { margin-top: 18px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .card h2 { font-size: 15px; margin: 0 0 4px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; overflow-wrap: anywhere; }
+  .state { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--chip); color: var(--muted); }
+  .state.done { color: var(--ok); } .state.dead, .state.error { color: var(--error); }
+  .meta { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 6px 8px; border-top: 1px solid var(--border); vertical-align: top; overflow-wrap: anywhere; }
+  th { color: var(--muted); font-weight: 600; width: 28%; }
+  td.ev { color: var(--muted); font-size: 13px; width: 34%; }
+  .err { color: var(--error); }
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--chip); padding: 8px; border-radius: 8px; font-size: 13px; margin: 0; }
+  @media (max-width: 560px) { td.ev { display: block; width: auto; border-top: 0; padding-top: 0; } }
+  input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--panel); color: var(--text); font: inherit; }
+  .answer { white-space: pre-wrap; overflow-wrap: anywhere; margin: 4px 0 10px; }
+  .scroll { overflow-x: auto; }
+  details { margin-top: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Insights</h1>
+  <p class="sub">Ask a question about the data. The assistant queries it and shows the SQL it ran.</p>
+  <input id="q" placeholder="e.g. Which region had the most revenue last quarter?" aria-label="Question">
+  <button id="go" type="button">Ask</button>
+  <div id="results"></div>
+</main>
+<script>
+(() => {
+  "use strict";
+  const app = location.pathname.split("/")[2] || "app";
+  const $ = (id) => document.getElementById(id);
+  document.title = $("title").textContent = app;
+  const store = {
+    get(k) { try { return localStorage.getItem(app + ":" + k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(app + ":" + k, v); } catch {} },
+  };
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+  async function ask(question) {
+    const headers = { "Content-Type": "application/json" };
+    const key = store.get("key");
+    if (key) headers["Authorization"] = "Bearer " + key;
+    const resp = await fetch("ask", { method: "POST", body: JSON.stringify({ question }), headers });
+    if (resp.status === 401) {
+      const k = prompt("This app needs an API key:");
+      if (!k) throw new Error("An API key is required.");
+      store.set("key", k.trim());
+      return ask(question);
+    }
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) throw new Error(data.error || "The server returned " + resp.status + ".");
+    return data;
+  }
+  function table(q) {
+    const t = el("table"), head = el("tr");
+    for (const c of q.columns || []) head.append(el("th", "", c));
+    t.append(head);
+    for (const r of q.rows || []) { const tr = el("tr"); for (const v of r) tr.append(el("td", "", v)); t.append(tr); }
+    const wrap = el("div", "scroll"); wrap.append(t);
+    return wrap;
+  }
+  async function run() {
+    const question = $("q").value.trim();
+    if (!question) return;
+    const c = el("div", "card"), h = el("h2");
+    h.append(el("span", "", question));
+    const body = el("div", "meta", "querying…");
+    c.append(h, body);
+    $("results").prepend(c);
+    $("go").disabled = true;
+    try {
+      const r = await ask(question);
+      body.className = ""; body.textContent = "";
+      if (r.error) body.append(el("div", "err", r.error));
+      if (r.answer) body.append(el("div", "answer", r.answer));
+      const qs = r.queries || [];
+      qs.forEach((q, i) => {
+        const d = el("details");
+        if (i === qs.length - 1 && !q.error) d.open = true;
+        d.append(el("summary", "", (q.database || "") + (q.error ? " · failed" : " · " + (q.rows || []).length + " rows" + (q.truncated ? " (more not shown)" : ""))));
+        d.append(el("pre", "", q.sql || ""));
+        if (q.error) d.append(el("div", "err", q.error)); else d.append(table(q));
+        body.append(d);
+      });
+    } catch (err) {
+      body.className = "err"; body.textContent = err.message;
+    } finally {
+      $("go").disabled = false;
+    }
+  }
+  $("go").addEventListener("click", run);
+  $("q").addEventListener("keydown", (e) => { if (e.key === "Enter") run(); });
+})();
+</script>
+</body>
+</html>

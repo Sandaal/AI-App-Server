@@ -1,0 +1,12 @@
+app: invoice-extraction
+version: 0.1.0
+blueprint: document-extraction   # upload documents, get the fields in schema.json with page evidence
+runtime: python3.12
+
+models:
+  chat:      { provider: openai, model: gpt-4o-mini }
+
+guardrails: [pii-redaction]   # redact emails, phone and card numbers before they reach the model
+ui: extract-widget             # upload page at /apps/invoice-extraction/
+workers: 2
+job_concurrency: 2             # documents processed at once

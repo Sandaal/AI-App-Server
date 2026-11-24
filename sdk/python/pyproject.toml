@@ -1,0 +1,22 @@
+[project]
+name = "aiapp"
+version = "1.1.0"
+description = "Python SDK and worker runtime for AI App Server"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+dependencies = [
+  # Must be at least the versions the stubs in aiapp/v1 were generated with.
+  "grpcio>=1.85.3",
+  "protobuf>=7.35.1",
+]
+
+[project.optional-dependencies]
+# Needed by the core's system worker to ingest PDFs (DOCX needs nothing extra).
+ingest = ["pypdf>=5"]
+
+[build-system]
+requires = ["setuptools>=77"]  # SPDX license string
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["aiapp*"]

@@ -1,0 +1,22 @@
+app: ticket-triage
+version: 0.1.0
+blueprint: classification   # sorts texts into the labels below
+runtime: python3.12
+
+models:
+  chat:      { provider: openai, model: gpt-4o-mini }
+
+classification:
+  labels:
+    - { name: billing,   description: "Invoices, charges, refunds and payment methods" }
+    - { name: technical, description: "Errors, bugs, outages and how-to questions" }
+    - { name: account,   description: "Sign-in, passwords, users and permissions" }
+    - { name: other,     description: "Anything else" }
+  instructions: "Texts are customer support tickets."
+  # multi_label: true
+  # topic: tickets                     # classify every record published to this topic
+  # output_topic: tickets.classified   # and publish each result here
+
+guardrails: [pii-redaction]   # redact emails, phone and card numbers before they reach the model
+ui: classify-widget            # try it at /apps/ticket-triage/
+workers: 2

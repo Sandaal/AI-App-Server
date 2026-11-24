@@ -1,0 +1,10 @@
+# A durable workflow with a human approval step: refunds over 100 wait for
+# a manager. Steps are saved, so it survives restarts and waits for days
+# without holding a worker.
+app: approval-workflow
+version: "1"
+routes:
+  - { path: /refund, handler: "handlers:start" }      # POST {"order_id": "A-1001"}
+  - { path: /status, handler: "handlers:status" }     # POST {"job": "job_..."}
+jobs:
+  - { name: refund, handler: "handlers:refund", max_attempts: 3 }

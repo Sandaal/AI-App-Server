@@ -1,0 +1,19 @@
+app: content-studio
+version: 0.1.0
+blueprint: content   # brief -> outline -> draft -> human review (approve, or comment and revise)
+runtime: python3.12
+
+models:
+  chat:      { provider: openai, model: gpt-4o-mini }
+
+content:
+  instructions: >
+    Write for busy professionals: plain words, short sentences, active voice.
+    Never promise delivery dates or prices that aren't in the brief.
+  max_rounds: 3                  # review rounds before giving up
+  review_timeout: 3d
+  # publish_topic: content.approved   # approved pieces are published here
+
+guardrails: [pii-redaction]   # redact emails, phone and card numbers before they reach the model
+ui: content-widget             # brief form at /apps/content-studio/; reviews at /apps/content-studio/_approvals/
+workers: 2

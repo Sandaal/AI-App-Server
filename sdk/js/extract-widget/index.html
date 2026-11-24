@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Extract</title>
+<style>
+  :root {
+    --bg: #f7f7f8; --panel: #ffffff; --text: #1f2328; --muted: #656d76; --border: #d0d7de;
+    --accent: #2f6feb; --ok: #1a7f37; --error: #b42318; --chip: #eef1f4; --drop: #eef4ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --panel: #161b22; --text: #e6edf3; --muted: #8d96a0; --border: #30363d;
+      --accent: #4c8dff; --ok: #3fb950; --error: #ff7b72; --chip: #21262d; --drop: #132339;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 20px 16px 40px; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  p.sub { margin: 0 0 18px; color: var(--muted); }
+  #drop { border: 2px dashed var(--border); border-radius: 12px; padding: 28px 16px; text-align: center; background: var(--panel); cursor: pointer; }
+  #drop.over { border-color: var(--accent); background: var(--drop); }
+  #drop strong { color: var(--accent); }
+  details { margin: 12px 0 0; }
+  textarea { width: 100%; min-height: 110px; margin-top: 8px; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--panel); color: var(--text); font: inherit; }
+  button { margin-top: 8px; border: 0; border-radius: 8px; padding: 8px 16px; background: var(--accent); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+  .card { margin-top: 18px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .card h2 { font-size: 15px; margin: 0 0 4px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; overflow-wrap: anywhere; }
+  .state { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--chip); color: var(--muted); }
+  .state.done { color: var(--ok); } .state.dead, .state.error { color: var(--error); }
+  .meta { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 6px 8px; border-top: 1px solid var(--border); vertical-align: top; overflow-wrap: anywhere; }
+  th { color: var(--muted); font-weight: 600; width: 28%; }
+  td.ev { color: var(--muted); font-size: 13px; width: 34%; }
+  .err { color: var(--error); }
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--chip); padding: 8px; border-radius: 8px; font-size: 13px; margin: 0; }
+  @media (max-width: 560px) { td.ev { display: block; width: auto; border-top: 0; padding-top: 0; } }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Extract</h1>
+  <p class="sub">Upload a PDF, Word or text document to extract its fields.</p>
+  <div id="drop" tabindex="0" role="button" aria-label="Choose documents">
+    <div><strong>Choose files</strong> or drop them here</div>
+    <div class="sub" style="margin:4px 0 0">PDF, DOCX, Markdown or text · up to 4 MB</div>
+    <input id="file" type="file" multiple accept=".pdf,.docx,.md,.markdown,.txt,text/plain" hidden>
+  </div>
+  <details>
+    <summary>Or paste text</summary>
+    <textarea id="paste" placeholder="Paste document text…" aria-label="Document text"></textarea>
+    <button id="pasteGo" type="button">Extract</button>
+  </details>
+  <div id="results"></div>
+</main>
+<script>
+(() => {
+  "use strict";
+  const app = location.pathname.split("/")[2] || "app";
+  const $ = (id) => document.getElementById(id);
+  document.title = $("title").textContent = app;
+  const store = {
+    get(k) { try { return localStorage.getItem(app + ":" + k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(app + ":" + k, v); } catch {} },
+  };
+  const el = (tag, cls, text) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  };
+
+  async function call(url, opts = {}) {
+    const headers = Object.assign({}, opts.headers);
+    const key = store.get("key");
+    if (key) headers["Authorization"] = "Bearer " + key;
+    let resp = await fetch(url, Object.assign({}, opts, { headers }));
+    if (resp.status === 401) {
+      const k = prompt("This app needs an API key:");
+      if (!k) throw new Error("An API key is required.");
+      store.set("key", k.trim());
+      return call(url, opts);
+    }
+    if (resp.status === 429) throw new Error("Too many requests. Wait a moment and try again.");
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok && resp.status !== 202) throw new Error(data.error || "The server returned " + resp.status + ".");
+    return data;
+  }
+
+  function card(name) {
+    const c = el("div", "card");
+    const h = el("h2");
+    h.append(el("span", "", name));
+    const st = el("span", "state", "uploading");
+    h.append(st);
+    const meta = el("div", "meta");
+    const body = el("div");
+    c.append(h, meta, body);
+    $("results").prepend(c);
+    return { st, meta, body };
+  }
+
+  function show(ui, job) {
+    ui.st.textContent = job.state;
+    ui.st.className = "state " + job.state;
+    ui.body.textContent = "";
+    if (job.state === "dead") {
+      ui.body.append(el("div", "err", job.error || "Extraction failed."));
+      return;
+    }
+    if (job.state !== "done") {
+      ui.meta.textContent = job.attempts > 1 ? "retrying (attempt " + job.attempts + ")…" : "extracting…";
+      return;
+    }
+    const r = job.result || {};
+    if (r.error) {
+      ui.st.textContent = "error"; ui.st.className = "state error";
+      ui.body.append(el("div", "err", r.error));
+      return;
+    }
+    const bits = [];
+    if (r.pages) bits.push(r.pages + (r.pages === 1 ? " page" : " pages"));
+    if (r.truncated) bits.push("long document: only the start was read");
+    ui.meta.textContent = bits.join(" · ");
+    const table = el("table");
+    const ev = r.evidence || {};
+    const data = r.data || {};
+    const keys = Object.keys(data);
+    if (!keys.length) ui.body.append(el("div", "meta", "No fields found."));
+    for (const k of keys) {
+      const tr = el("tr");
+      tr.append(el("th", "", k));
+      const td = el("td");
+      const v = data[k];
+      if (v !== null && typeof v === "object") td.append(el("pre", "", JSON.stringify(v, null, 2)));
+      else td.textContent = String(v);
+      tr.append(td);
+      const e = ev[k];
+      tr.append(el("td", "ev", e ? (e.page ? "p. " + e.page + " · " : "") + "“" + (e.quote || "") + "”" : ""));
+      table.append(tr);
+    }
+    if (keys.length) ui.body.append(table);
+  }
+
+  async function submit(name, body, contentType) {
+    const ui = card(name);
+    try {
+      let job = await call("extract?wait=20", {
+        method: "POST", body, headers: { "Content-Type": contentType, "X-Filename": name },
+      });
+      show(ui, job);
+      while (job.state === "queued" || job.state === "running") {
+        await new Promise((r) => setTimeout(r, 1500));
+        job = await call("result?id=" + encodeURIComponent(job.job));
+        show(ui, job);
+      }
+    } catch (err) {
+      ui.st.textContent = "error"; ui.st.className = "state error";
+      ui.body.textContent = "";
+      ui.body.append(el("div", "err", err.message));
+    }
+  }
+
+  const drop = $("drop"), file = $("file");
+  drop.addEventListener("click", () => file.click());
+  drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); file.click(); } });
+  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+  drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); [...e.dataTransfer.files].forEach(send); });
+  file.addEventListener("change", () => { [...file.files].forEach(send); file.value = ""; });
+  function send(f) {
+    if (f.size > 4 * 1024 * 1024) { const ui = card(f.name); show(ui, { state: "dead", error: "Larger than 4 MB." }); return; }
+    submit(f.name, f, f.type || "application/octet-stream");
+  }
+  $("pasteGo").addEventListener("click", () => {
+    const t = $("paste").value.trim();
+    if (t) submit("pasted text", JSON.stringify({ text: t }), "application/json");
+  });
+})();
+</script>
+</body>
+</html>

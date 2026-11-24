@@ -1,0 +1,39 @@
+# Answer from documents in other systems. The local folder works as is;
+# uncomment the connectors you need and fill in your details. Secrets come
+# from `aiapp secret set NAME` (or ${kv:...} / ${vault:...}), never this file.
+app: connectors
+version: "1"
+models:
+  chat:      { provider: openai, model: gpt-4o-mini }
+  embedding: { provider: openai, model: text-embedding-3-small }
+sources:
+  - path: ./docs/
+
+  # SharePoint document library (Entra app with Sites.Read.All application permission)
+  # - name: hr-site
+  #   sharepoint: { tenant: contoso.onmicrosoft.com, client_id: 00000000-0000-0000-0000-000000000000,
+  #                 client_secret: "${GRAPH_CLIENT_SECRET}", site: "contoso.sharepoint.com:/sites/hr", folder: Policies }
+  #   schedule: 1h
+
+  # Git repository (private ones need a token)
+  # - name: handbook
+  #   git: { url: "https://github.com/contoso/handbook", branch: main, paths: [docs/], token: "${GITHUB_TOKEN}" }
+  #   schedule: 1h
+
+  # Website, from its sitemap
+  # - name: website
+  #   http: { sitemap: "https://www.contoso.com/sitemap.xml", max_pages: 500 }
+  #   schedule: 24h
+
+  # Rows of a database table, one document each
+  # - name: kb
+  #   sql: { driver: postgres, dsn: "${KB_DATABASE_URL}", query: "SELECT id, title, body, updated_at FROM articles",
+  #          id: id, text: body, title: title, updated: updated_at }
+  #   schedule: 30m
+
+  # S3 or Azure Blob storage
+  # - { name: manuals, s3: { bucket: product-manuals, prefix: en/, region: eu-west-1 }, schedule: 6h }
+  # - { name: contracts, azure_blob: { account: contosodocs, container: contracts, sas: "${AZURE_BLOB_SAS}" }, schedule: 6h }
+blueprint: knowledge-chat
+ui: chat-widget
+guardrails: [pii-redaction, prompt-injection, { citations-required: { routes: [/chat] } }]

@@ -1,0 +1,12 @@
+# The knowledge-chat blueprint with its code copied into the app (my_chat.py)
+# and changed. The blueprint still provides the settings, the page and the
+# model checks; the /chat route now runs your copy.
+app: customized-blueprint
+version: "1"
+blueprint: knowledge-chat
+models:
+  chat:      { provider: openai, model: gpt-4o-mini }
+  embedding: { provider: openai, model: text-embedding-3-small }
+sources: [{ path: ./docs/ }]
+routes:
+  - { path: /chat, handler: "my_chat:chat", stream: true }   # was aiapp.blueprints.knowledge_chat:chat

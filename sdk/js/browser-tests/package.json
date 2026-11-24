@@ -1,0 +1,8 @@
+{
+  "name": "aiapp-browser-tests",
+  "private": true,
+  "description": "Browser tests (Playwright, Chromium) for the web components, the built-in pages and the console. Run with scripts/e2e-browser.sh.",
+  "type": "module",
+  "scripts": { "test": "playwright test" },
+  "devDependencies": { "@playwright/test": "1.49.1" }
+}

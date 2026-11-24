@@ -1,0 +1,25 @@
+{
+  "name": "@aiapp-server/client",
+  "version": "1.1.0",
+  "description": "Client and web components for AI App Server apps: streaming chat, uploads, approvals.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+    "./elements": { "types": "./dist/elements.d.ts", "default": "./dist/elements.js" }
+  },
+  "files": ["dist"],
+  "sideEffects": ["./dist/elements.js", "./dist/aiapp.js"],
+  "scripts": {
+    "build": "tsc -p . && esbuild src/bundle.ts --bundle --format=esm --target=es2020 --minify --legal-comments=none --outfile=dist/aiapp.js",
+    "typecheck": "tsc -p . --noEmit",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "jsdom": "26.1.0",
+    "typescript": "5.9.3"
+  }
+}

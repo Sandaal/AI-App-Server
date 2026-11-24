@@ -5,8 +5,9 @@ An app is a folder with an `ai-app.yaml` file. Start from a blueprint, then chan
 ## Learn the basics
 
 1. [Your first app](first-app.md): a blueprint app, then an app with your own Python handler.
-2. [The ten blueprints](blueprints.md): what each ready-made app does.
-3. [The ai-app.yaml file](manifest.md): every section, in one page.
+2. [Example apps](examples.md): complete, tested apps for every use case, to copy and change.
+3. [The ten blueprints](blueprints.md): what each ready-made app does, and [how to change their code](customize-blueprints.md).
+4. [The ai-app.yaml file](manifest.md): every section, in one page.
 
 ## Add features
 

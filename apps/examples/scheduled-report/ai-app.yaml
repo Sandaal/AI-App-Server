@@ -1,0 +1,17 @@
+# Background work: a nightly job (cron) writes a report and publishes an
+# event; a subscription reacts to it. Jobs retry; events are durable.
+app: scheduled-report
+version: "1"
+models:
+  chat: { provider: openai, model: gpt-4o-mini }
+jobs:
+  - { name: daily-report, handler: "handlers:daily_report", max_attempts: 3, timeout: 10m }
+cron:
+  - { name: nightly, schedule: "0 6 * * *", job: daily-report, timezone: Europe/London }
+topics:
+  reports: { retention: 30d }
+subscriptions:
+  - { topic: reports, handler: "handlers:on_report", max_attempts: 5 }   # failures go to reports.dead
+routes:
+  - { path: /run, handler: "handlers:run_now" }       # start the job by hand
+  - { path: /latest, handler: "handlers:latest" }     # what the subscriber stored

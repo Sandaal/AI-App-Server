@@ -1,0 +1,16 @@
+app: code-assistant
+version: 0.1.0
+blueprint: code-assistant   # questions about a codebase, answered with file:line citations
+runtime: python3.12
+
+models:
+  chat:      { provider: openai, model: gpt-4o-mini }
+  embedding: { provider: openai, model: text-embedding-3-small }
+
+# The code to index; every source here is read as code. A Git repository:
+# sources:
+#   - { name: app, git: { url: "https://github.com/your-org/your-repo", branch: main, token: "${GITHUB_TOKEN}" }, schedule: 1h }
+sources: [{ path: ./repo/ }]
+
+ui: chat-widget   # chat at /apps/code-assistant/
+workers: 2
