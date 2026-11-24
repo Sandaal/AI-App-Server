@@ -47,6 +47,14 @@ cd hr-bot && aiapp source add ./policies/ && aiapp deploy
 
     [Operate](operate/index.md)
 
+-   **Source and examples**
+
+    ---
+
+    Tested example apps for every use case, the Python and JavaScript SDK source, deployment templates and releases.
+
+    [github.com/Sandaal/ai-app-server](https://github.com/Sandaal/ai-app-server) · [What's there](reference/repository.md)
+
 </div>
 
 ## What you get
@@ -60,4 +68,4 @@ cd hr-bot && aiapp source add ./policies/ && aiapp deploy
 | **Enterprise sign-in** | API keys with roles, Entra ID and any OIDC provider, multi-tenant isolation, audit log export to your SIEM |
 | **Operations** | zero-downtime deploys and rollback, quotas per app, traces, Prometheus and OpenTelemetry, encrypted backups |
 
-[Download the latest release](download.md){ .md-button .md-button--primary } [Read the quickstart](get-started/quickstart.md){ .md-button }
+[Download the latest release](download.md){ .md-button .md-button--primary } [Read the quickstart](get-started/quickstart.md){ .md-button } [Browse the source on GitHub](https://github.com/Sandaal/ai-app-server){ .md-button }

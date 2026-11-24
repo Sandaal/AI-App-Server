@@ -2,6 +2,9 @@
 
 An app is a folder with an `ai-app.yaml` file. Start from a blueprint, then change settings or add your own Python.
 
+!!! tip "Start from working code"
+    The public repository has [tested example apps](https://github.com/Sandaal/ai-app-server/tree/main/apps) for every use case and [one example per feature](https://github.com/Sandaal/ai-app-server/tree/main/apps/examples), plus the [Python SDK source](https://github.com/Sandaal/ai-app-server/tree/main/sdk/python/aiapp) (including [how each blueprint works](https://github.com/Sandaal/ai-app-server/tree/main/sdk/python/aiapp/blueprints)) and the [JavaScript SDK](https://github.com/Sandaal/ai-app-server/tree/main/sdk/js). `git clone https://github.com/Sandaal/ai-app-server.git`
+
 ## Learn the basics
 
 1. [Your first app](first-app.md): a blueprint app, then an app with your own Python handler.

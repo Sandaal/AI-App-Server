@@ -15,3 +15,5 @@ For the people who run the server for others.
 | Deploy safely and roll back | [Versions and rollback](versions.md) |
 | Back up and restore | [Backups and restore](backups.md) |
 | Something is wrong | [Troubleshooting](troubleshooting.md) |
+
+**Deployment templates** (Helm chart, Azure Container Apps and AKS, the systemd unit) are in the public repository's [`deploy/`](https://github.com/Sandaal/ai-app-server/tree/main/deploy) folder. Report problems as [issues](https://github.com/Sandaal/ai-app-server/issues), and security issues [privately](https://github.com/Sandaal/ai-app-server/security).

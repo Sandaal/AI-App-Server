@@ -12,6 +12,8 @@
 | Azure Container Apps or AKS | [Azure](azure.md) | Azure, with `azd up` |
 | No internet access | [Offline servers](offline.md) | air-gapped networks |
 
+**Downloads** are on the public repository's [releases page](https://github.com/Sandaal/ai-app-server/releases); the Helm chart and Azure templates are in its [`deploy/`](https://github.com/Sandaal/ai-app-server/tree/main/deploy) folder.
+
 ## What every install needs
 
 - **Python for app handlers.** Install [uv](https://docs.astral.sh/uv/) and the server prepares Python by itself on first start. Or use Python 3.10 or later with the worker packages: `pip install "grpcio>=1.85.3" "protobuf>=7.35.1" "pypdf>=5"`.

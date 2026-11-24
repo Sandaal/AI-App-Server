@@ -99,6 +99,7 @@ nav:
       - Troubleshooting: operate/troubleshooting.md
   - Reference:
       - reference/index.md
+      - The public repository: reference/repository.md
       - Commands: reference/cli.md
       - Server configuration files: reference/config-files.md
       - Environment variables: reference/environment.md
