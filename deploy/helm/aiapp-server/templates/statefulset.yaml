@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "aiapp.fullname" . }}
+  labels: {{- include "aiapp.labels" . | nindent 4 }}
+spec:
+  replicas: 1   # embedded storage: one server per volume
+  serviceName: {{ include "aiapp.fullname" . }}
+  selector:
+    matchLabels: {{- include "aiapp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "aiapp.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}{{ toYaml . | nindent 8 }}{{ end }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}{{ toYaml . | nindent 8 }}{{ end }}
+    spec:
+      serviceAccountName: {{ include "aiapp.serviceAccountName" . }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext: {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 45   # workers drain in-flight requests
+      containers:
+        - name: server
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - serve
+            - --addr=0.0.0.0:8080
+            {{- if .Values.gateway }}
+            - --gateway=/etc/aiapp/gateway.yaml
+            {{- end }}
+            {{- if .Values.console }}
+            - --console-config=/etc/aiapp/console.yaml
+            {{- end }}
+            {{- if .Values.auditExport }}
+            - --audit-export=/etc/aiapp/audit-export.yaml
+            {{- end }}
+            {{- if .Values.metrics.enabled }}
+            - --metrics-addr=0.0.0.0:{{ .Values.metrics.port }}
+            {{- end }}
+          ports:
+            - { name: http, containerPort: 8080 }
+            {{- if .Values.metrics.enabled }}
+            - { name: metrics, containerPort: {{ .Values.metrics.port }} }
+            {{- end }}
+          env:
+            {{- if .Values.masterKey.existingSecret }}
+            - { name: AIAPP_MASTER_KEY_FILE, value: /etc/aiapp/master-key/{{ .Values.masterKey.key }} }
+            {{- end }}
+            {{- range $k, $v := .Values.env }}
+            - { name: {{ $k }}, value: {{ $v | quote }} }
+            {{- end }}
+          {{- if or .Values.secretEnv .Values.existingSecret }}
+          envFrom:
+            {{- if .Values.secretEnv }}
+            - secretRef: { name: {{ include "aiapp.fullname" . }}-env }
+            {{- end }}
+            {{- if .Values.existingSecret }}
+            - secretRef: { name: {{ .Values.existingSecret }} }
+            {{- end }}
+          {{- end }}
+          readinessProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 15
+            failureThreshold: 4
+          startupProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 5
+            failureThreshold: 120   # first start builds Python environments and indexes documents
+          securityContext: {{- toYaml .Values.securityContext | nindent 12 }}
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - { name: data, mountPath: /data }
+            - { name: tmp, mountPath: /tmp }
+            {{- if .Values.gateway }}
+            - { name: config, mountPath: /etc/aiapp/gateway.yaml, subPath: gateway.yaml, readOnly: true }
+            {{- end }}
+            {{- if .Values.console }}
+            - { name: config, mountPath: /etc/aiapp/console.yaml, subPath: console.yaml, readOnly: true }
+            {{- end }}
+            {{- if .Values.auditExport }}
+            - { name: config, mountPath: /etc/aiapp/audit-export.yaml, subPath: audit-export.yaml, readOnly: true }
+            {{- end }}
+            {{- if .Values.masterKey.existingSecret }}
+            - { name: master-key, mountPath: /etc/aiapp/master-key, readOnly: true }
+            {{- end }}
+            {{- range .Values.apps.configMaps }}
+            - { name: app-{{ .name }}, mountPath: /apps/{{ .name }}, readOnly: true }
+            {{- end }}
+      volumes:
+        - { name: tmp, emptyDir: {} }
+        {{- if not .Values.persistence.enabled }}
+        - { name: data, emptyDir: {} }
+        {{- end }}
+        {{- if or .Values.gateway .Values.console .Values.auditExport }}
+        - name: config
+          configMap: { name: {{ include "aiapp.fullname" . }} }
+        {{- end }}
+        {{- if .Values.masterKey.existingSecret }}
+        - name: master-key
+          secret: { secretName: {{ .Values.masterKey.existingSecret }}, defaultMode: 0400 }
+        {{- end }}
+        {{- range .Values.apps.configMaps }}
+        - name: app-{{ .name }}
+          configMap: { name: {{ .configMap }} }
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: {{- toYaml .Values.persistence.accessModes | nindent 10 }}
+        {{- if .Values.persistence.storageClass }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+  {{- end }}

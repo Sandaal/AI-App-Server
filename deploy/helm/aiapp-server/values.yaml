@@ -1,0 +1,111 @@
+# AI App Server keeps its data (encrypted KV, vectors, versions, audit) on one
+# volume, so it runs as a single replica. Scale up with resources; run more
+# servers for more apps.
+
+image:
+  repository: aiapp-server        # e.g. youracr.azurecr.io/aiapp-server
+  tag: ""                         # default: the chart's appVersion
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+
+# Apps to deploy at startup. Apps baked into the image (FROM aiapp-server,
+# COPY my-app /apps/my-app) need nothing here. Flat apps (no subfolders) can
+# come from ConfigMaps: kubectl create configmap hr-bot --from-file=apps/hr-bot/
+apps:
+  configMaps: []
+  #  - name: hr-bot           # folder name under /apps
+  #    configMap: hr-bot
+
+# Environment for the server and its workers. Provider keys belong in
+# secretEnv (stored in a Secret) or an existing Secret; apps read them as
+# ${NAME} or api_key_env.
+env: {}
+  # OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+  # AIAPP_ENV: prod             # use ai-app.prod.yaml overlays
+secretEnv: {}
+  # OPENAI_API_KEY: sk-...
+existingSecret: ""              # envFrom this Secret as well
+
+# The master key encrypts all app data. By default it is created on first
+# start inside the data volume. To keep it apart from the data (recommended:
+# backups of the volume then don't contain it), point at a Secret holding it.
+masterKey:
+  existingSecret: ""            # kubectl create secret generic aiapp-master-key --from-file=master.key
+  key: master.key
+
+# Operator model configuration (gateway.yaml: deployments, routing, prices).
+gateway: ""
+#  models:
+#    chat:
+#      deployments:
+#        - { provider: azure-openai, endpoint: https://..., model: gpt-4o, api_key_env: AZURE_OPENAI_API_KEY }
+
+# Host the console at https://YOUR-HOST/_console/ with OIDC sign-in (console.yaml).
+console: ""
+#  public_url: https://aiapp.example.com
+#  oidc:
+#    issuer: https://login.microsoftonline.com/TENANT/v2.0
+#    client_id: 00000000-0000-0000-0000-000000000000
+#    client_secret_env: CONSOLE_CLIENT_SECRET    # put the value in secretEnv
+#  roles: { AIApp.Viewers: viewer, AIApp.Operators: operator, AIApp.Admins: admin }
+
+# Export the audit log to a SIEM (audit-export.yaml).
+auditExport: ""
+#  sinks:
+#    - { name: siem, type: syslog, address: "siem.internal:6514", network: tls }
+#    - { name: otel, type: otlp, endpoint: "http://otel-collector:4318" }
+
+persistence:
+  enabled: true
+  size: 10Gi
+  storageClass: ""
+  accessModes: [ReadWriteOnce]
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # Streaming answers need buffering off, e.g. for ingress-nginx:
+    # nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    # nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+  hosts:
+    - host: ai.example.com
+      paths: [{ path: /, pathType: Prefix }]
+  tls: []
+
+metrics:
+  enabled: false                # Prometheus /metrics on its own port
+  port: 9464
+  serviceMonitor:
+    enabled: false              # needs the Prometheus Operator CRDs
+    interval: 30s
+
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}               # e.g. azure.workload.identity/client-id
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile: { type: RuntimeDefault }
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities: { drop: [ALL] }
+
+resources:
+  requests: { cpu: 250m, memory: 512Mi }
+  limits: { memory: 4Gi }
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

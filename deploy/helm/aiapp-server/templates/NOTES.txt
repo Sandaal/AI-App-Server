@@ -1,0 +1,20 @@
+AI App Server is starting (one replica, data on {{ if .Values.persistence.enabled }}a {{ .Values.persistence.size }} volume{{ else }}an emptyDir - lost on restart{{ end }}).
+
+Reach it:
+{{- if .Values.ingress.enabled }}
+{{- range .Values.ingress.hosts }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}/apps/APP/
+{{- end }}
+{{- else }}
+  kubectl port-forward svc/{{ include "aiapp.fullname" . }} 8080:{{ .Values.service.port }}
+  curl http://127.0.0.1:8080/health
+{{- end }}
+
+Run CLI commands inside the pod (they use the local admin socket):
+  kubectl exec -it {{ include "aiapp.fullname" . }}-0 -- aiapp apps
+  kubectl exec -it {{ include "aiapp.fullname" . }}-0 -- aiapp key create APP --name web
+{{- if not .Values.masterKey.existingSecret }}
+
+The master key was created inside the data volume. Copy it somewhere safe:
+  kubectl cp {{ include "aiapp.fullname" . }}-0:/data/master.key ./master.key
+{{- end }}

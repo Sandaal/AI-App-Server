@@ -1,0 +1,105 @@
+site_name: AI App Server
+site_description: Run AI applications (chat over documents, extraction, agents, workflows) from one small configuration file.
+site_url: https://sandaal.github.io/aiapp-server/
+repo_url: https://github.com/Sandaal/aiapp-server
+repo_name: Sandaal/aiapp-server
+edit_uri: ""
+copyright: AI App Server
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle: { icon: material/weather-night, name: Dark mode }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle: { icon: material/weather-sunny, name: Light mode }
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - md_in_html
+  - tables
+  - toc: { permalink: true }
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - { name: mermaid, class: mermaid, format: !!python/name:pymdownx.superfences.fence_code_format }
+  - pymdownx.tabbed: { alternate_style: true }
+  - pymdownx.highlight: { anchor_linenums: true }
+  - pymdownx.inlinehilite
+
+nav:
+  - Home: index.md
+  - Get started:
+      - get-started/index.md
+      - How it works: get-started/how-it-works.md
+      - Quickstart (10 minutes): get-started/quickstart.md
+  - Install and run:
+      - install/index.md
+      - Windows: install/windows.md
+      - macOS: install/macos.md
+      - Linux: install/linux.md
+      - Docker: install/docker.md
+      - Kubernetes (Helm): install/kubernetes.md
+      - Azure: install/azure.md
+      - Offline servers: install/offline.md
+      - Model providers: install/models.md
+      - Upgrade and uninstall: install/upgrade.md
+  - Build apps:
+      - build/index.md
+      - Your first app: build/first-app.md
+      - The ten blueprints: build/blueprints.md
+      - The ai-app.yaml file: build/manifest.md
+      - Documents and connectors: build/documents.md
+      - Python handlers: build/handlers.md
+      - Storage, memory and search: build/storage.md
+      - Agents, tools and MCP: build/agents.md
+      - Workflows and approvals: build/workflows.md
+      - Jobs, schedules and events: build/jobs-events.md
+      - Guardrails: build/guardrails.md
+      - Pages and web components: build/web.md
+      - Call apps from your code: build/clients.md
+      - Publish apps to AI agents (MCP): build/mcp-server.md
+      - Test and evaluate: build/testing.md
+      - Traces in your code: build/tracing.md
+      - VS Code: build/vscode.md
+  - Operate:
+      - operate/index.md
+      - Security checklist: operate/security.md
+      - API keys and roles: operate/keys.md
+      - Sign-in (Entra ID, OIDC): operate/sign-in.md
+      - Secrets and vaults: operate/secrets.md
+      - The console: operate/console.md
+      - Audit log and SIEM: operate/audit.md
+      - Monitoring: operate/monitoring.md
+      - Quotas and limits: operate/quotas.md
+      - Versions and rollback: operate/versions.md
+      - Backups and restore: operate/backups.md
+      - Troubleshooting: operate/troubleshooting.md
+  - Reference:
+      - reference/index.md
+      - Commands: reference/cli.md
+      - Server configuration files: reference/config-files.md
+      - Environment variables: reference/environment.md
+      - HTTP endpoints: reference/http.md
+      - FAQ: reference/faq.md
+  - Download: download.md

@@ -1,0 +1,31 @@
+{{- if or .Values.gateway .Values.console .Values.auditExport }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "aiapp.fullname" . }}
+  labels: {{- include "aiapp.labels" . | nindent 4 }}
+data:
+  {{- range $file, $v := dict "gateway.yaml" .Values.gateway "console.yaml" .Values.console "audit-export.yaml" .Values.auditExport }}
+  {{- if $v }}
+  {{ $file }}: |
+    {{- if kindIs "string" $v }}
+    {{- $v | nindent 4 }}
+    {{- else }}
+    {{- toYaml $v | nindent 4 }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+{{- end }}
+---
+{{- if .Values.secretEnv }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "aiapp.fullname" . }}-env
+  labels: {{- include "aiapp.labels" . | nindent 4 }}
+type: Opaque
+stringData:
+  {{- range $k, $v := .Values.secretEnv }}
+  {{ $k }}: {{ $v | quote }}
+  {{- end }}
+{{- end }}

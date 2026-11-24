@@ -1,0 +1,893 @@
+{
+  "$id": "https://github.com/Sandaal/AI-App-Server/ai-app.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agent": {
+      "additionalProperties": false,
+      "properties": {
+        "approval_required": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "approval_timeout": {
+          "type": "string"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "max_steps": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "app": {
+      "description": "App name: 2-63 lowercase letters, digits or hyphens. Also the URL path: /apps/NAME/.",
+      "type": "string"
+    },
+    "auth": {
+      "additionalProperties": false,
+      "description": "Sign-in tokens (OIDC, e.g. Entra ID) and whether a credential is required.",
+      "properties": {
+        "oidc": {
+          "additionalProperties": false,
+          "properties": {
+            "audience": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "client_id": {
+              "type": "string"
+            },
+            "client_secret_env": {
+              "type": "string"
+            },
+            "introspection": {
+              "additionalProperties": false,
+              "properties": {
+                "client_id": {
+                  "type": "string"
+                },
+                "client_secret_env": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "issuer": {
+              "type": "string"
+            },
+            "issuers": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "jwks_url": {
+              "type": "string"
+            },
+            "role_map": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "roles_claim": {
+              "type": "string"
+            },
+            "scopes": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "tenant_isolation": {
+              "type": "boolean"
+            },
+            "tenants": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "blueprint": {
+      "description": "A built-in app type that supplies the routes and handlers (knowledge-chat, document-extraction, ...).",
+      "type": "string"
+    },
+    "classification": {
+      "additionalProperties": false,
+      "properties": {
+        "instructions": {
+          "type": "string"
+        },
+        "labels": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "multi_label": {
+          "type": "boolean"
+        },
+        "output_topic": {
+          "type": "string"
+        },
+        "topic": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "content": {
+      "additionalProperties": false,
+      "properties": {
+        "instructions": {
+          "type": "string"
+        },
+        "max_rounds": {
+          "type": "integer"
+        },
+        "publish_topic": {
+          "type": "string"
+        },
+        "review_timeout": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "cors": {
+      "additionalProperties": false,
+      "description": "Origins of web pages allowed to call the app from the browser.",
+      "properties": {
+        "origins": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "cron": {
+      "description": "Scheduled jobs or handlers.",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "handler": {
+            "type": "string"
+          },
+          "job": {
+            "type": "string"
+          },
+          "missed": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "payload": {},
+          "schedule": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "guardrail_mode": {
+      "description": "enforce (default) or dry-run (log decisions without applying them).",
+      "type": "string"
+    },
+    "guardrails": {
+      "description": "Checks on requests and responses: pii-redaction, prompt-injection, blocked-topics, max-input, output-pii, citations-required, or a Python plugin.",
+      "items": {
+        "anyOf": [
+          {
+            "description": "a guardrail with default settings",
+            "type": "string"
+          },
+          {
+            "additionalProperties": {
+              "additionalProperties": false,
+              "properties": {
+                "api_key_env": {
+                  "type": "string"
+                },
+                "blocklists": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "categories": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "chars": {
+                  "type": "integer"
+                },
+                "dry_run": {
+                  "type": "boolean"
+                },
+                "endpoint": {
+                  "type": "string"
+                },
+                "entities": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "events": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "handler": {
+                  "type": "string"
+                },
+                "jobs": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "language": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "model": {
+                  "type": "string"
+                },
+                "on_error": {
+                  "type": "string"
+                },
+                "options": {
+                  "additionalProperties": {},
+                  "type": "object"
+                },
+                "prompt_shields": {
+                  "type": "boolean"
+                },
+                "routes": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "score": {
+                  "type": "number"
+                },
+                "severity": {
+                  "type": "integer"
+                },
+                "stage": {
+                  "type": "string"
+                },
+                "threshold": {
+                  "type": "integer"
+                },
+                "topics": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "keywords": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "patterns": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "description": "a guardrail name with its settings",
+            "maxProperties": 1,
+            "minProperties": 1,
+            "type": "object"
+          }
+        ]
+      },
+      "type": "array"
+    },
+    "insights": {
+      "additionalProperties": false,
+      "properties": {
+        "databases": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "driver": {
+                "type": "string"
+              },
+              "dsn": {
+                "type": "string"
+              },
+              "max_rows": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "tables": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "files": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "max_steps": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "job_concurrency": {
+      "type": "integer"
+    },
+    "jobs": {
+      "description": "Durable background jobs (app.jobs.enqueue).",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "handler": {
+            "type": "string"
+          },
+          "max_attempts": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "timeout": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "mcp": {
+      "description": "MCP servers whose tools handlers and agents can call.",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "allow": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "command": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "env": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "headers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "mcp_server": {
+      "additionalProperties": false,
+      "properties": {
+        "instructions": {
+          "type": "string"
+        },
+        "roles": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "routes": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "input": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "route": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "tools": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "meeting_notes": {
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": "string"
+        },
+        "vocabulary": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "models": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "api_key_env": {
+            "type": "string"
+          },
+          "cache": {
+            "type": "boolean"
+          },
+          "deployment": {
+            "type": "string"
+          },
+          "endpoint": {
+            "type": "string"
+          },
+          "fallback": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "price": {
+            "additionalProperties": false,
+            "properties": {
+              "input": {
+                "type": "number"
+              },
+              "output": {
+                "type": "number"
+              },
+              "per_minute": {
+                "type": "number"
+              }
+            },
+            "type": "object"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "semantic_cache": {
+            "additionalProperties": false,
+            "properties": {
+              "embedding": {
+                "type": "string"
+              },
+              "threshold": {
+                "type": "number"
+              }
+            },
+            "type": "object"
+          },
+          "use": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Logical models the handlers call by name (app.models.NAME).",
+      "type": "object"
+    },
+    "rate_limit": {
+      "description": "Requests per minute per client (0: the server default).",
+      "type": "integer"
+    },
+    "routes": {
+      "description": "HTTP routes: POST /apps/APP/PATH runs the handler (module:function).",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "handler": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "stream": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "runtime": {
+      "description": "Python version for handlers, e.g. python3.12.",
+      "type": "string"
+    },
+    "sources": {
+      "description": "Documents to index for search: local paths or connectors (git, http, s3, azure_blob, sql, sharepoint).",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "azure_blob": {
+            "additionalProperties": false,
+            "properties": {
+              "account": {
+                "type": "string"
+              },
+              "container": {
+                "type": "string"
+              },
+              "endpoint": {
+                "type": "string"
+              },
+              "prefix": {
+                "type": "string"
+              },
+              "sas": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "chunking": {
+            "additionalProperties": false,
+            "properties": {
+              "overlap": {
+                "type": "integer"
+              },
+              "size": {
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "code": {
+            "type": "boolean"
+          },
+          "git": {
+            "additionalProperties": false,
+            "properties": {
+              "branch": {
+                "type": "string"
+              },
+              "paths": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "token": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "http": {
+            "additionalProperties": false,
+            "properties": {
+              "headers": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              "max_pages": {
+                "type": "integer"
+              },
+              "sitemap": {
+                "type": "string"
+              },
+              "urls": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "s3": {
+            "additionalProperties": false,
+            "properties": {
+              "access_key": {
+                "type": "string"
+              },
+              "bucket": {
+                "type": "string"
+              },
+              "endpoint": {
+                "type": "string"
+              },
+              "path_style": {
+                "type": "boolean"
+              },
+              "prefix": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "secret_key": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "schedule": {
+            "type": "string"
+          },
+          "sharepoint": {
+            "additionalProperties": false,
+            "properties": {
+              "client_id": {
+                "type": "string"
+              },
+              "client_secret": {
+                "type": "string"
+              },
+              "drive": {
+                "type": "string"
+              },
+              "folder": {
+                "type": "string"
+              },
+              "graph_url": {
+                "type": "string"
+              },
+              "login_url": {
+                "type": "string"
+              },
+              "site": {
+                "type": "string"
+              },
+              "tenant": {
+                "type": "string"
+              },
+              "user": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "sql": {
+            "additionalProperties": false,
+            "properties": {
+              "driver": {
+                "type": "string"
+              },
+              "dsn": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "query": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "updated": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "subscriptions": {
+      "description": "Handlers that receive each record of a topic, in order.",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "consumer": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string"
+          },
+          "handler": {
+            "type": "string"
+          },
+          "max_attempts": {
+            "type": "integer"
+          },
+          "topic": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "summary": {
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": "string"
+        },
+        "max_words": {
+          "type": "integer"
+        },
+        "style": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "support": {
+      "additionalProperties": false,
+      "properties": {
+        "actions_topic": {
+          "type": "string"
+        },
+        "approval_required": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "approval_timeout": {
+          "type": "string"
+        },
+        "handoff_topic": {
+          "type": "string"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "max_steps": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "topics": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "max_bytes": {
+            "type": "string"
+          },
+          "partitions": {
+            "type": "integer"
+          },
+          "retention": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Event topics with retention.",
+      "type": "object"
+    },
+    "ui": {
+      "description": "A built-in page at /apps/APP/ (chat-widget, extract-widget, ...) or a folder of static files.",
+      "type": "string"
+    },
+    "version": {
+      "description": "Your app's version, shown in aiapp versions and used by aiapp rollback --to.",
+      "type": "string"
+    },
+    "workers": {
+      "description": "Worker processes for this app (default 2).",
+      "type": "integer"
+    }
+  },
+  "title": "AI App Server manifest overlay (ai-app.ENV.yaml)",
+  "type": "object"
+}

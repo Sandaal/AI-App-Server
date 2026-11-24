@@ -1,0 +1,32 @@
+# AI App Server as a systemd service (installed by: sudo sh install.sh --service).
+# Apps in /etc/aiapp/apps/NAME are deployed at start; provider keys go in
+# /etc/aiapp/env (KEY=value lines). CLI: sudo -u aiapp AIAPP_DATA_DIR=/var/lib/aiapp aiapp apps
+[Unit]
+Description=AI App Server
+Documentation=https://github.com/Sandaal/AI-App-Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=aiapp
+Group=aiapp
+Environment=HOME=/var/lib/aiapp
+Environment=AIAPP_DATA_DIR=/var/lib/aiapp
+Environment=UV_CACHE_DIR=/var/lib/aiapp/.uv-cache
+EnvironmentFile=-/etc/aiapp/env
+ExecStart=/usr/local/bin/aiapp serve --addr 127.0.0.1:8080 --apps-dir /etc/aiapp/apps
+Restart=on-failure
+RestartSec=3
+# Workers drain in-flight requests before the server exits.
+TimeoutStopSec=45
+LimitNOFILE=65536
+NoNewPrivileges=yes
+ProtectSystem=strict
+ReadWritePaths=/var/lib/aiapp
+ProtectHome=yes
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+# azd template: AI App Server on Azure Container Apps.
+#   azd init --template <this folder>   (or copy it next to your apps)
+#   azd up
+# Put your apps in ./apps (one folder each); they are built into the image.
+name: aiapp-server-aca
+metadata:
+  template: aiapp-server-container-apps@0.1.0
+services:
+  server:
+    project: .
+    host: containerapp
+    language: docker
+    docker:
+      path: ./Dockerfile
+      remoteBuild: true
