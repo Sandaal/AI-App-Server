@@ -10,7 +10,7 @@ A nightly job (cron) writes a report with the model and publishes it as an event
 
 ## Run it
 
-With a running server ([install](https://sandaal.github.io/aiapp-server/install/)) and a model key (`aiapp secret set OPENAI_API_KEY`):
+With a running server ([install](https://sandaal.github.io/ai-app-server/install/)) and a model key (`aiapp secret set OPENAI_API_KEY`):
 
 ```bash
 cd scheduled-report
@@ -36,4 +36,4 @@ aiapp cron scheduled-report && aiapp topics scheduled-report
 
 Copy the folder into your own repository, change it (`aiapp dev` redeploys on every save), run `aiapp test`, then `aiapp deploy` to your server. `aiapp rollback` goes back.
 
-Guide: [Jobs Events](https://sandaal.github.io/aiapp-server/build/jobs-events/)
+Guide: [Jobs Events](https://sandaal.github.io/ai-app-server/build/jobs-events/)

@@ -1,8 +1,8 @@
 site_name: AI App Server
 site_description: Run AI applications (chat over documents, extraction, agents, workflows) from one small configuration file.
-site_url: https://sandaal.github.io/aiapp-server/
-repo_url: https://github.com/Sandaal/aiapp-server
-repo_name: Sandaal/aiapp-server
+site_url: https://sandaal.github.io/ai-app-server/
+repo_url: https://github.com/Sandaal/ai-app-server
+repo_name: Sandaal/ai-app-server
 edit_uri: ""
 copyright: AI App Server
 

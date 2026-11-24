@@ -17,4 +17,4 @@ When settings aren't enough, copy a blueprint's Python into your app and change 
 
 To undo, point the handler back at `aiapp.blueprints.knowledge_chat:chat`. Your copy doesn't change when you upgrade the server; compare it with new releases now and then.
 
-Guide: [Customize a blueprint's code](https://sandaal.github.io/aiapp-server/build/customize-blueprints/)
+Guide: [Customize a blueprint's code](https://sandaal.github.io/ai-app-server/build/customize-blueprints/)

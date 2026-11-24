@@ -3,7 +3,7 @@
 # /etc/aiapp/env (KEY=value lines). CLI: sudo -u aiapp AIAPP_DATA_DIR=/var/lib/aiapp aiapp apps
 [Unit]
 Description=AI App Server
-Documentation=https://github.com/Sandaal/AI-App-Server
+Documentation=https://github.com/Sandaal/ai-app-server
 After=network-online.target
 Wants=network-online.target
 

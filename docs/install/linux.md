@@ -5,7 +5,7 @@ Works on x86_64 and arm64, on any distribution (glibc or musl).
 ## 1. Run the installer
 
 ```bash
-curl -fsSLO https://github.com/Sandaal/aiapp-server/releases/latest/download/install.sh
+curl -fsSLO https://github.com/Sandaal/ai-app-server/releases/latest/download/install.sh
 sh install.sh
 ```
 

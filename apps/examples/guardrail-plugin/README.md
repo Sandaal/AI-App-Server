@@ -11,7 +11,7 @@ A guardrail written in Python (no competitor names in questions or answers), tog
 
 ## Run it
 
-With a running server ([install](https://sandaal.github.io/aiapp-server/install/)) and a model key (`aiapp secret set OPENAI_API_KEY`):
+With a running server ([install](https://sandaal.github.io/ai-app-server/install/)) and a model key (`aiapp secret set OPENAI_API_KEY`):
 
 ```bash
 cd guardrail-plugin
@@ -29,11 +29,11 @@ curl -X POST -d '{"question":"Is Fabrikam cheaper?"}' http://127.0.0.1:8080/apps
 
 - Write your rule in `guards.py`: return `allow()`, `redact(texts)` or `block(reason, message)`.
 - Use a model as a classifier inside the guardrail with `app.models`.
-- Add `presidio` (names, addresses) or `azure-content-safety`: see [Guardrails](https://sandaal.github.io/aiapp-server/build/guardrails/).
+- Add `presidio` (names, addresses) or `azure-content-safety`: see [Guardrails](https://sandaal.github.io/ai-app-server/build/guardrails/).
 - Tune safely with `guardrail_mode: dry-run`.
 
 ## Change it and redeploy
 
 Copy the folder into your own repository, change it (`aiapp dev` redeploys on every save), run `aiapp test`, then `aiapp deploy` to your server. `aiapp rollback` goes back.
 
-Guide: [Guardrails](https://sandaal.github.io/aiapp-server/build/guardrails/)
+Guide: [Guardrails](https://sandaal.github.io/ai-app-server/build/guardrails/)

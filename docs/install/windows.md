@@ -7,7 +7,7 @@ Works on Windows 10 and 11 and Windows Server 2019 or later, on x64 and ARM.
 Open **PowerShell** (no admin rights needed) and run:
 
 ```powershell
-irm https://github.com/Sandaal/aiapp-server/releases/latest/download/install.ps1 -OutFile install.ps1
+irm https://github.com/Sandaal/ai-app-server/releases/latest/download/install.ps1 -OutFile install.ps1
 powershell -ExecutionPolicy Bypass -File install.ps1
 ```
 

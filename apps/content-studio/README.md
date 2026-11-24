@@ -4,7 +4,7 @@ Turns a brief into an outline and a draft, then sends it for human review; revie
 
 ## Run it
 
-You need a running server ([install](https://sandaal.github.io/aiapp-server/install/)) and a model key:
+You need a running server ([install](https://sandaal.github.io/ai-app-server/install/)) and a model key:
 
 ```bash
 aiapp secret set OPENAI_API_KEY          # or use another provider, see below
@@ -35,8 +35,8 @@ curl -X POST -H "Content-Type: application/json" \
 3. Check it: `aiapp test` (if there is a `tests/` folder) and `aiapp eval` (with `evals/`).
 4. Deploy to your server: `aiapp deploy`. Every deploy is a new version with no downtime; `aiapp rollback` goes back.
 
-**Another model provider:** change `models:` in `ai-app.yaml` (Azure OpenAI, Anthropic, Gemini, Bedrock, or a local Ollama), see [Model providers](https://sandaal.github.io/aiapp-server/install/models/).
+**Another model provider:** change `models:` in `ai-app.yaml` (Azure OpenAI, Anthropic, Gemini, Bedrock, or a local Ollama), see [Model providers](https://sandaal.github.io/ai-app-server/install/models/).
 
-**Before others use it:** API keys or sign-in, HTTPS and quotas, see the [security checklist](https://sandaal.github.io/aiapp-server/operate/security/).
+**Before others use it:** API keys or sign-in, HTTPS and quotas, see the [security checklist](https://sandaal.github.io/ai-app-server/operate/security/).
 
-Blueprint: `content` · [All settings](https://sandaal.github.io/aiapp-server/build/blueprints/) · [ai-app.yaml reference](https://sandaal.github.io/aiapp-server/build/manifest/)
+Blueprint: `content` · [All settings](https://sandaal.github.io/ai-app-server/build/blueprints/) · [ai-app.yaml reference](https://sandaal.github.io/ai-app-server/build/manifest/)

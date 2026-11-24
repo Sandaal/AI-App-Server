@@ -4,7 +4,7 @@ Most changes to a blueprint app are settings in `ai-app.yaml`, plus your own too
 
 ## Where the code is
 
-Each blueprint is a Python file in the SDK, published in the [`sdk/python/aiapp/blueprints/`](https://github.com/Sandaal/aiapp-server/tree/main/sdk/python/aiapp/blueprints) folder:
+Each blueprint is a Python file in the SDK, published in the [`sdk/python/aiapp/blueprints/`](https://github.com/Sandaal/ai-app-server/tree/main/sdk/python/aiapp/blueprints) folder:
 
 | Blueprint | File | Routes → functions |
 |---|---|---|

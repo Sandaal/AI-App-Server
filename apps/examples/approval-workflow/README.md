@@ -10,7 +10,7 @@ A durable refund workflow: small refunds are paid at once, larger ones wait for 
 
 ## Run it
 
-With a running server ([install](https://sandaal.github.io/aiapp-server/install/)) and a model key (`aiapp secret set OPENAI_API_KEY`):
+With a running server ([install](https://sandaal.github.io/ai-app-server/install/)) and a model key (`aiapp secret set OPENAI_API_KEY`):
 
 ```bash
 cd approval-workflow
@@ -36,4 +36,4 @@ aiapp approve approval-workflow APPROVAL_ID
 
 Copy the folder into your own repository, change it (`aiapp dev` redeploys on every save), run `aiapp test`, then `aiapp deploy` to your server. `aiapp rollback` goes back.
 
-Guide: [Workflows](https://sandaal.github.io/aiapp-server/build/workflows/)
+Guide: [Workflows](https://sandaal.github.io/ai-app-server/build/workflows/)

@@ -28,4 +28,4 @@ The server starts safe: it listens on `127.0.0.1` only, and the CLI works only o
 
 ## Reporting a vulnerability
 
-Please report security issues privately through GitHub's *Report a vulnerability* on the [repository](https://github.com/Sandaal/aiapp-server/security), not in public issues.
+Please report security issues privately through GitHub's *Report a vulnerability* on the [repository](https://github.com/Sandaal/ai-app-server/security), not in public issues.

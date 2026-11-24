@@ -9,7 +9,7 @@ You will install the server, connect a model, and deploy a chat app that answers
     In PowerShell:
 
     ```powershell
-    irm https://github.com/Sandaal/aiapp-server/releases/latest/download/install.ps1 -OutFile install.ps1
+    irm https://github.com/Sandaal/ai-app-server/releases/latest/download/install.ps1 -OutFile install.ps1
     powershell -ExecutionPolicy Bypass -File install.ps1
     ```
 
@@ -18,7 +18,7 @@ You will install the server, connect a model, and deploy a chat app that answers
 === "macOS / Linux"
 
     ```bash
-    curl -fsSLO https://github.com/Sandaal/aiapp-server/releases/latest/download/install.sh
+    curl -fsSLO https://github.com/Sandaal/ai-app-server/releases/latest/download/install.sh
     sh install.sh
     ```
 

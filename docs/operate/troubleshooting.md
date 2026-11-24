@@ -23,4 +23,4 @@
 
 1. Find the request's id in the `X-Invocation-Id` response header, and run `aiapp trace ID`.
 2. Collect `aiapp version`, the error message and the server log lines around it.
-3. Open an issue on [GitHub](https://github.com/Sandaal/aiapp-server/issues), without keys, prompts or personal data.
+3. Open an issue on [GitHub](https://github.com/Sandaal/ai-app-server/issues), without keys, prompts or personal data.

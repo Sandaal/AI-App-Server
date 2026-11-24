@@ -1,6 +1,6 @@
 # Download
 
-**Latest release:** [github.com/Sandaal/aiapp-server/releases/latest](https://github.com/Sandaal/aiapp-server/releases/latest), with release notes.
+**Latest release:** [github.com/Sandaal/ai-app-server/releases/latest](https://github.com/Sandaal/ai-app-server/releases/latest), with release notes.
 
 The quickest way is the installer for your platform ([Windows](install/windows.md), [macOS](install/macos.md), [Linux](install/linux.md)), which picks the right file and checks it. To download by hand:
 
@@ -18,7 +18,7 @@ The quickest way is the installer for your platform ([Windows](install/windows.m
 
 **Docker:** `docker pull ghcr.io/sandaal/aiapp-server:latest` (amd64 and arm64).
 
-**Helm chart and Azure templates:** in the [repository](https://github.com/Sandaal/aiapp-server), under `deploy/`.
+**Helm chart and Azure templates:** in the [repository](https://github.com/Sandaal/ai-app-server), under `deploy/`.
 
 ## Verify a download
 
@@ -37,4 +37,4 @@ The quickest way is the installer for your platform ([Windows](install/windows.m
 
 ## Release notes
 
-Each release's notes are on its [release page](https://github.com/Sandaal/aiapp-server/releases); the full history is in [CHANGELOG.md](https://github.com/Sandaal/aiapp-server/blob/main/CHANGELOG.md).
+Each release's notes are on its [release page](https://github.com/Sandaal/ai-app-server/releases); the full history is in [CHANGELOG.md](https://github.com/Sandaal/ai-app-server/blob/main/CHANGELOG.md).

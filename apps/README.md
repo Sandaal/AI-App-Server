@@ -40,6 +40,6 @@ aiapp test                                    # tests with scripted models (no c
 aiapp deploy                                  # to your server; aiapp rollback goes back
 ```
 
-These apps use OpenAI (`aiapp secret set OPENAI_API_KEY`). To use Azure OpenAI, Anthropic, Gemini, Bedrock or a local Ollama, change `models:` in `ai-app.yaml`: see [Model providers](https://sandaal.github.io/aiapp-server/install/models/).
+These apps use OpenAI (`aiapp secret set OPENAI_API_KEY`). To use Azure OpenAI, Anthropic, Gemini, Bedrock or a local Ollama, change `models:` in `ai-app.yaml`: see [Model providers](https://sandaal.github.io/ai-app-server/install/models/).
 
 How the built-in blueprints work inside: their Python source is in [`sdk/python/aiapp/blueprints/`](../sdk/python/aiapp/blueprints/). To change one beyond its settings, copy its logic into your own handlers.

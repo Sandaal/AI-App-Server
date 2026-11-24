@@ -13,7 +13,7 @@ An agent that carries out tasks with your tools and MCP servers; chosen tools (l
 
 ## Run it
 
-You need a running server ([install](https://sandaal.github.io/aiapp-server/install/)) and a model key:
+You need a running server ([install](https://sandaal.github.io/ai-app-server/install/)) and a model key:
 
 ```bash
 aiapp secret set OPENAI_API_KEY          # or use another provider, see below
@@ -34,9 +34,9 @@ curl -X POST -H "Content-Type: application/json" \
 ## Extend it
 
 - **Your tools:** replace `tools.py` with functions for your systems; the docstrings are what the agent reads.
-- **MCP servers:** add tools from any MCP server under `mcp:` ([guide](https://sandaal.github.io/aiapp-server/build/agents/)).
+- **MCP servers:** add tools from any MCP server under `mcp:` ([guide](https://sandaal.github.io/ai-app-server/build/agents/)).
 - **Approvals:** list risky tools in `agent.approval_required`; decide at `/apps/ops-agent/_approvals/` or with `aiapp approve`.
-- **Let other agents use it:** publish tools with `mcp_server:` ([guide](https://sandaal.github.io/aiapp-server/build/mcp-server/)).
+- **Let other agents use it:** publish tools with `mcp_server:` ([guide](https://sandaal.github.io/ai-app-server/build/mcp-server/)).
 
 ## Change it and redeploy
 
@@ -45,8 +45,8 @@ curl -X POST -H "Content-Type: application/json" \
 3. Check it: `aiapp test` (if there is a `tests/` folder) and `aiapp eval` (with `evals/`).
 4. Deploy to your server: `aiapp deploy`. Every deploy is a new version with no downtime; `aiapp rollback` goes back.
 
-**Another model provider:** change `models:` in `ai-app.yaml` (Azure OpenAI, Anthropic, Gemini, Bedrock, or a local Ollama), see [Model providers](https://sandaal.github.io/aiapp-server/install/models/).
+**Another model provider:** change `models:` in `ai-app.yaml` (Azure OpenAI, Anthropic, Gemini, Bedrock, or a local Ollama), see [Model providers](https://sandaal.github.io/ai-app-server/install/models/).
 
-**Before others use it:** API keys or sign-in, HTTPS and quotas, see the [security checklist](https://sandaal.github.io/aiapp-server/operate/security/).
+**Before others use it:** API keys or sign-in, HTTPS and quotas, see the [security checklist](https://sandaal.github.io/ai-app-server/operate/security/).
 
-Blueprint: `workflow-agent` · [All settings](https://sandaal.github.io/aiapp-server/build/blueprints/) · [ai-app.yaml reference](https://sandaal.github.io/aiapp-server/build/manifest/)
+Blueprint: `workflow-agent` · [All settings](https://sandaal.github.io/ai-app-server/build/blueprints/) · [ai-app.yaml reference](https://sandaal.github.io/ai-app-server/build/manifest/)

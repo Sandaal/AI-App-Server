@@ -24,7 +24,7 @@ The extension talks to a server on the same machine (`aiapp serve`).
 Completion for `ai-app.yaml` works with just the YAML extension: add this line at the top of the file:
 
 ```yaml
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Sandaal/aiapp-server/main/schema/ai-app.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Sandaal/ai-app-server/main/schema/ai-app.schema.json
 ```
 
 ## Coding assistants

@@ -13,7 +13,7 @@ Turns recordings or transcripts into a summary, decisions, action items with own
 
 ## Run it
 
-You need a running server ([install](https://sandaal.github.io/aiapp-server/install/)) and a model key:
+You need a running server ([install](https://sandaal.github.io/ai-app-server/install/)) and a model key:
 
 ```bash
 aiapp secret set OPENAI_API_KEY          # or use another provider, see below
@@ -34,7 +34,7 @@ curl -X POST -F file=@samples/transcript.txt \
 
 - **Audio:** upload mp3, m4a, wav, webm, ogg or flac; the `transcribe` model turns it into text.
 - **Your vocabulary:** list product and people names in `meeting_notes.vocabulary` so they are spelled right.
-- **Send the notes on:** subscribe to the result and post action items to Teams, Jira or email ([guide](https://sandaal.github.io/aiapp-server/build/jobs-events/)).
+- **Send the notes on:** subscribe to the result and post action items to Teams, Jira or email ([guide](https://sandaal.github.io/ai-app-server/build/jobs-events/)).
 
 ## Change it and redeploy
 
@@ -43,8 +43,8 @@ curl -X POST -F file=@samples/transcript.txt \
 3. Check it: `aiapp test` (if there is a `tests/` folder) and `aiapp eval` (with `evals/`).
 4. Deploy to your server: `aiapp deploy`. Every deploy is a new version with no downtime; `aiapp rollback` goes back.
 
-**Another model provider:** change `models:` in `ai-app.yaml` (Azure OpenAI, Anthropic, Gemini, Bedrock, or a local Ollama), see [Model providers](https://sandaal.github.io/aiapp-server/install/models/).
+**Another model provider:** change `models:` in `ai-app.yaml` (Azure OpenAI, Anthropic, Gemini, Bedrock, or a local Ollama), see [Model providers](https://sandaal.github.io/ai-app-server/install/models/).
 
-**Before others use it:** API keys or sign-in, HTTPS and quotas, see the [security checklist](https://sandaal.github.io/aiapp-server/operate/security/).
+**Before others use it:** API keys or sign-in, HTTPS and quotas, see the [security checklist](https://sandaal.github.io/ai-app-server/operate/security/).
 
-Blueprint: `meeting-notes` · [All settings](https://sandaal.github.io/aiapp-server/build/blueprints/) · [ai-app.yaml reference](https://sandaal.github.io/aiapp-server/build/manifest/)
+Blueprint: `meeting-notes` · [All settings](https://sandaal.github.io/ai-app-server/build/blueprints/) · [ai-app.yaml reference](https://sandaal.github.io/ai-app-server/build/manifest/)

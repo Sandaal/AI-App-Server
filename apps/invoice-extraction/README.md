@@ -17,7 +17,7 @@ Upload invoices (PDF, scans, photos, Office files) and get the fields you define
 
 ## Run it
 
-You need a running server ([install](https://sandaal.github.io/aiapp-server/install/)) and a model key:
+You need a running server ([install](https://sandaal.github.io/ai-app-server/install/)) and a model key:
 
 ```bash
 aiapp secret set OPENAI_API_KEY          # or use another provider, see below
@@ -38,7 +38,7 @@ curl -X POST -F file=@samples/invoice.txt \
 
 - **Other documents:** change `schema.json` to the fields of contracts, purchase orders, ID documents… and adjust `instructions.md`.
 - **Large batches:** call `/extract` without `?wait`; it returns a job id, then fetch `/result?id=JOB`. `job_concurrency` sets how many run at once.
-- **Send results on:** add a route or job in Python that posts the JSON to your ERP ([handlers guide](https://sandaal.github.io/aiapp-server/build/handlers/)).
+- **Send results on:** add a route or job in Python that posts the JSON to your ERP ([handlers guide](https://sandaal.github.io/ai-app-server/build/handlers/)).
 
 ## Change it and redeploy
 
@@ -47,8 +47,8 @@ curl -X POST -F file=@samples/invoice.txt \
 3. Check it: `aiapp test` (if there is a `tests/` folder) and `aiapp eval` (with `evals/`).
 4. Deploy to your server: `aiapp deploy`. Every deploy is a new version with no downtime; `aiapp rollback` goes back.
 
-**Another model provider:** change `models:` in `ai-app.yaml` (Azure OpenAI, Anthropic, Gemini, Bedrock, or a local Ollama), see [Model providers](https://sandaal.github.io/aiapp-server/install/models/).
+**Another model provider:** change `models:` in `ai-app.yaml` (Azure OpenAI, Anthropic, Gemini, Bedrock, or a local Ollama), see [Model providers](https://sandaal.github.io/ai-app-server/install/models/).
 
-**Before others use it:** API keys or sign-in, HTTPS and quotas, see the [security checklist](https://sandaal.github.io/aiapp-server/operate/security/).
+**Before others use it:** API keys or sign-in, HTTPS and quotas, see the [security checklist](https://sandaal.github.io/ai-app-server/operate/security/).
 
-Blueprint: `document-extraction` · [All settings](https://sandaal.github.io/aiapp-server/build/blueprints/) · [ai-app.yaml reference](https://sandaal.github.io/aiapp-server/build/manifest/)
+Blueprint: `document-extraction` · [All settings](https://sandaal.github.io/ai-app-server/build/blueprints/) · [ai-app.yaml reference](https://sandaal.github.io/ai-app-server/build/manifest/)

@@ -14,7 +14,7 @@ A support assistant that answers from your help centre, looks up orders with you
 
 ## Run it
 
-You need a running server ([install](https://sandaal.github.io/aiapp-server/install/)) and a model key:
+You need a running server ([install](https://sandaal.github.io/ai-app-server/install/)) and a model key:
 
 ```bash
 aiapp secret set OPENAI_API_KEY          # or use another provider, see below
@@ -36,7 +36,7 @@ curl -X POST -H "Content-Type: application/json" \
 
 - **Connect your systems:** replace the examples in `tools.py` with calls to your order, CRM or ticketing APIs. Each `@app.tool` function's docstring tells the model when to use it.
 - **Approvals:** tools listed under `support.approval_required` wait for a person at `/apps/customer-support/_approvals/` (needs the `approver` role: `aiapp key create customer-support --role approver`).
-- **Handoffs:** conversations handed to a person are published to the `support.handoffs` topic; add a [subscription](https://sandaal.github.io/aiapp-server/build/jobs-events/) that creates a ticket in your helpdesk.
+- **Handoffs:** conversations handed to a person are published to the `support.handoffs` topic; add a [subscription](https://sandaal.github.io/ai-app-server/build/jobs-events/) that creates a ticket in your helpdesk.
 - **Tone and rules:** edit `support.instructions`.
 
 ## Change it and redeploy
@@ -46,8 +46,8 @@ curl -X POST -H "Content-Type: application/json" \
 3. Check it: `aiapp test` (if there is a `tests/` folder) and `aiapp eval` (with `evals/`).
 4. Deploy to your server: `aiapp deploy`. Every deploy is a new version with no downtime; `aiapp rollback` goes back.
 
-**Another model provider:** change `models:` in `ai-app.yaml` (Azure OpenAI, Anthropic, Gemini, Bedrock, or a local Ollama), see [Model providers](https://sandaal.github.io/aiapp-server/install/models/).
+**Another model provider:** change `models:` in `ai-app.yaml` (Azure OpenAI, Anthropic, Gemini, Bedrock, or a local Ollama), see [Model providers](https://sandaal.github.io/ai-app-server/install/models/).
 
-**Before others use it:** API keys or sign-in, HTTPS and quotas, see the [security checklist](https://sandaal.github.io/aiapp-server/operate/security/).
+**Before others use it:** API keys or sign-in, HTTPS and quotas, see the [security checklist](https://sandaal.github.io/ai-app-server/operate/security/).
 
-Blueprint: `customer-support` · [All settings](https://sandaal.github.io/aiapp-server/build/blueprints/) · [ai-app.yaml reference](https://sandaal.github.io/aiapp-server/build/manifest/)
+Blueprint: `customer-support` · [All settings](https://sandaal.github.io/ai-app-server/build/blueprints/) · [ai-app.yaml reference](https://sandaal.github.io/ai-app-server/build/manifest/)

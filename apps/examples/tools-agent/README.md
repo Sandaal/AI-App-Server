@@ -11,7 +11,7 @@ The model calls your Python functions (stock and delivery lookups) until it can 
 
 ## Run it
 
-With a running server ([install](https://sandaal.github.io/aiapp-server/install/)) and a model key (`aiapp secret set OPENAI_API_KEY`):
+With a running server ([install](https://sandaal.github.io/ai-app-server/install/)) and a model key (`aiapp secret set OPENAI_API_KEY`):
 
 ```bash
 cd tools-agent
@@ -35,4 +35,4 @@ curl -X POST -d '{"question":"Is the grinder in stock, and how fast can you deli
 
 Copy the folder into your own repository, change it (`aiapp dev` redeploys on every save), run `aiapp test`, then `aiapp deploy` to your server. `aiapp rollback` goes back.
 
-Guide: [Agents](https://sandaal.github.io/aiapp-server/build/agents/)
+Guide: [Agents](https://sandaal.github.io/ai-app-server/build/agents/)

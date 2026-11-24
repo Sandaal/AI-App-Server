@@ -1,12 +1,12 @@
 # Run on Kubernetes (Helm)
 
-The Helm chart is in the [public repository](https://github.com/Sandaal/aiapp-server/tree/main/deploy/helm/aiapp-server), folder `deploy/helm/aiapp-server`.
+The Helm chart is in the [public repository](https://github.com/Sandaal/ai-app-server/tree/main/deploy/helm/aiapp-server), folder `deploy/helm/aiapp-server`.
 
 ## Install
 
 ```bash
-git clone --depth 1 https://github.com/Sandaal/aiapp-server.git
-helm install ai ./aiapp-server/deploy/helm/aiapp-server \
+git clone --depth 1 https://github.com/Sandaal/ai-app-server.git
+helm install ai ./ai-app-server/deploy/helm/aiapp-server \
   --set image.repository=ghcr.io/sandaal/aiapp-server --set image.tag=1.1.0 \
   --set secretEnv.OPENAI_API_KEY=sk-...
 kubectl exec -it ai-aiapp-server-0 -- aiapp apps

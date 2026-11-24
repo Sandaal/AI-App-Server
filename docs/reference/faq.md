@@ -22,4 +22,4 @@ Each server keeps its own data, so run one server per set of apps (a StatefulSet
 The server is free to download and use. You pay your model provider for what you use; `aiapp logs` and the budgets in `aiapp quota` keep track.
 
 **Where do I report a bug or ask a question?**
-[GitHub issues](https://github.com/Sandaal/aiapp-server/issues). For security issues, see [Security](../operate/security.md#reporting-a-vulnerability).
+[GitHub issues](https://github.com/Sandaal/ai-app-server/issues). For security issues, see [Security](../operate/security.md#reporting-a-vulnerability).

@@ -5,7 +5,7 @@ Works on macOS 12 or later, Intel and Apple silicon.
 ## 1. Run the installer
 
 ```bash
-curl -fsSLO https://github.com/Sandaal/aiapp-server/releases/latest/download/install.sh
+curl -fsSLO https://github.com/Sandaal/ai-app-server/releases/latest/download/install.sh
 sh install.sh
 ```
 

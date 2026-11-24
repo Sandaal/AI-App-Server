@@ -5,4 +5,4 @@
 - [Environment variables](environment.md).
 - [HTTP endpoints](http.md): what the server answers on.
 - [FAQ](faq.md).
-- The `ai-app.yaml` format: [guide](../build/manifest.md) and [JSON Schema](https://raw.githubusercontent.com/Sandaal/aiapp-server/main/schema/ai-app.schema.json) (`aiapp schema` prints it too).
+- The `ai-app.yaml` format: [guide](../build/manifest.md) and [JSON Schema](https://raw.githubusercontent.com/Sandaal/ai-app-server/main/schema/ai-app.schema.json) (`aiapp schema` prints it too).
