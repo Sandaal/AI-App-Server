@@ -9,8 +9,19 @@
 | `AIAPP_ENV` | `--env` | default environment overlay (`ai-app.ENV.yaml`) |
 | `AIAPP_PUBLIC_URL` | `--public-url` | the server's address as browsers see it (page sign-in) |
 | `AIAPP_METRICS_ADDR` | `--metrics-addr` | serve Prometheus `/metrics` here |
-| `AIAPP_VECTOR_QUANTIZATION` | `--vector-quantization` | `int8` to store vectors in a quarter of the memory |
+| `AIAPP_VECTOR_QUANTIZATION` | `--vector-quantization` | `auto` (default: int8 when vectors outgrow their memory budget), `int8` or `none` |
+| `AIAPP_HAL_PROFILE` | | emulate a machine: a built-in profile (`gpu-server`, `grace-hopper`, …) or a JSON file from `aiapp hardware --save` |
 | `AIAPP_PYTHON` | `--python` | Python interpreter for workers |
+| `AIAPP_NODE` | `--node` | Node.js for apps with `runtime: node` |
+| `AIAPP_NPM` | | npm, for Node apps' dependencies |
+| `AIAPP_LLAMA_SERVER` | `--llama-server` | llama.cpp server for [local models](../install/local-models.md) |
+| `AIAPP_VLLM` | `--vllm` | vLLM for local models on GPUs |
+| `AIAPP_RESP_ADDR` | `--resp-addr` | serve the [Redis protocol](../build/redis.md) here |
+| `AIAPP_RESP_TLS_CERT`, `AIAPP_RESP_TLS_KEY` | `--resp-tls-cert`, `--resp-tls-key` | TLS for the Redis protocol |
+| `AIAPP_CLUSTER_ADDR` | `--cluster-addr` | Raft address for [clustering](../operate/cluster.md) (cluster API on the next port) |
+| `AIAPP_CLUSTER_ADVERTISE` | `--cluster-advertise` | the address other nodes use to reach this one |
+| `AIAPP_NODE_ID` | `--node-id` | this node's name in the cluster |
+| `AIAPP_GPUS` | | GPUs to use, instead of detecting them: `0:24GB,1:24GB` or `2x80GB` |
 | `AIAPP_UV` | | path to `uv` |
 | `AIAPP_WHEELHOUSE` | `--wheelhouse` | install Python packages only from this folder (offline) |
 | `AIAPP_MASTER_KEY_FILE` | | read the master key from this file |

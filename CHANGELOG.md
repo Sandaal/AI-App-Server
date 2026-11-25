@@ -2,6 +2,126 @@
 
 ## Unreleased
 
+## v3.0.0 (2026-11-25)
+
+Phase 2 (ADRs 0040–0049) and the first Phase 3 milestones (ADRs 0050–0053), in the v2.0 plan and the v3.0 plan.
+
+**What is verified and what isn't.** Phase 2 is tested on real systems: local models on CPU, Redis clients, pgvector, three-node clusters and the Node.js runtime. GPU, vLLM, Event Hubs and Azure AI Search have run only against emulated GPUs or fakes. The Phase 3 features are a **preview**: data-plane drivers, CXL tiering and confidential apps have run only on emulated hardware, and the BlueField DPU driver isn't built yet. The hardware benchmarks (M2.9, M3.6) are still to do. The [Project status](https://sandaal.github.io/ai-app-server/status/) page lists every area and how it was tested.
+
+- **Project status page** on the docs site: what is tested on real systems, what on emulated hardware or fakes, and the hardware the project needs. The public repository has a hardware-offer issue form.
+
+- **Confidential apps.**
+  - **Placement:** `confidential: {}` in the manifest runs an app only on servers that attest with AMD SEV-SNP or Intel TDX, through Linux's configfs-tsm. `measurements: [...]` limits it to approved VM images. In a cluster such apps are placed only on attested nodes.
+  - **Key release:** with `--key-broker URL`, the app's data key is wrapped by a key a broker releases only against a fresh attestation report. A server without it can't read the app's data, even with the master key.
+  - **Audit:** the node's evidence is in the audit log, and every record carries a reference to it.
+  - **Tested:** with an emulated platform and a fake broker.
+
+  (ADR 0053)
+- **Vector collections move between memory and disk by use.**
+  - **Budget:** collections may take half of the memory, plus half of any CXL memory the kernel tiers to.
+  - **Over budget:** the collections used longest ago go to their own encrypted file. They load back on their next search or write with the same results, and stay on disk across restarts.
+  - **Idle collections:** `--vector-cold-after` also moves collections unused for a while.
+  - **Backups and cluster snapshots** carry every collection in full, and quotas count every tier.
+  - **Visibility:** `aiapp hardware` shows the split and the plan's warm tier (CXL or DRAM).
+
+  (ADR 0052)
+- **Model routing by request, latency and cost.**
+  - **Conditions:** a deployment can take only some requests: `min_prompt_tokens`, `max_prompt_tokens` and `max_output_tokens`. Long prompts go to long-context engines and short classifications to small CPU models.
+  - **`routing: latency`:** picks the deployment predicted to answer first, from its measured time to first token and the calls it is serving.
+  - **`routing: cost`:** picks the cheapest deployment predicted to answer within `latency_target_ms`. So a free local model takes the traffic until requests queue on it, and then they spill to a hosted model.
+  - **Budgets:** apps past 80% of a model budget get the cheapest target.
+  - **Visibility:** `aiapp gateway` shows each deployment's time to first token and the calls in progress.
+
+  (ADR 0051)
+- **Data-plane drivers (Phase 3 begins).**
+  - **What:** encryption of stored data, checksums, TLS, the inference KV-cache tier and cluster replication traffic now go through one driver interface.
+  - **Drivers:** the host driver (the CPUs) is the default. A DPU driver can take over when the hardware has a data processor.
+  - **Choosing:** `--data-plane auto|host|dpu`. A driver is used only after it proves it gives the host driver's exact ciphertext and digests; otherwise the server falls back to the host and says why.
+  - **Detection:** BlueField, BlueField-2 and BlueField-3 cards (PCI scan), plus an emulated `dpu-server` profile.
+  - **Visibility:** `aiapp hardware` shows where each function runs and how much work it has done.
+
+  (ADR 0050)
+- **Clusters, part 3: every node serves.**
+  - **Serving:** every node runs the apps' workers and serves requests itself. The leader also runs jobs, subscriptions, schedules, Kafka bridges and connector syncs, and a node that becomes leader starts them in place.
+  - **Consistency:** writes that read and then change data (counters, sets, lists, locks, topic offsets, approvals, model spend) run on the leader, so concurrent requests on different nodes never lose an update. A node reads its own writes.
+  - **Placement:** `cluster: { nodes: N }` in the manifest runs an app on N nodes (the leader and N−1 others); by default it runs on every node.
+  - **Routing:** requests with `X-Session-Id` always go to the same node, which keeps that conversation's context cache warm. Responses say which node served them in `X-AIApp-Node`.
+  - **Faster failover:** elections in data clusters take under a second.
+  - **Fix:** a restarted node could report itself caught up while thousands of entries were still queued for its stores.
+  - **Tested:** in the node-loss test about 2,600 writes went through a follower while the leader was killed, and none was lost. 150 concurrent increments through three nodes add up to exactly 150.
+
+  (ADR 0049)
+- **Clusters, part 2: replicated data and failover.**
+  - **What is replicated:** every write a cluster acknowledges is on a majority of nodes before the reply. That covers app data, memory, jobs, events, vectors, files, deployed versions, keys and secrets.
+  - **Serving:** the leader runs the apps and the other nodes forward requests to it. If the leader fails, another node takes over the apps with all the data.
+  - **Joining:** new nodes receive a full copy and join as non-voters until they have caught up.
+  - **Tested:** in the node-loss test the leader was killed during 2,824 acknowledged writes, and none was lost.
+
+  (ADR 0048)
+- **Clusters, part 1: the control plane.**
+  - **Forming one:** start servers with `--cluster-addr` and form a cluster with `aiapp cluster init`, `aiapp cluster join ADDR --token …`, `leave`, `remove` and `status`.
+  - **How it works:** a Raft group (hashicorp/raft, with its log on Pebble) agrees on membership, leadership, node health and cluster settings. It survives losing a minority of nodes, and restarted nodes rejoin by themselves.
+  - **Security:** all node-to-node traffic is TLS 1.3, pinned to the cluster's own certificate, and joining needs a token.
+  - **Not yet:** replicated app data and routing come next.
+
+  (ADR 0047)
+- **Context memory (faster first tokens for long contexts):**
+  - **Prefix-aware routing:** requests that share a prompt prefix (a conversation, or a long system prompt) go to the engine replica that already holds it in its KV cache. It applies to local models with `replicas: N`, and to logical models with `routing: prefix` over your own inference servers. New conversations are balanced over replicas, and the load is bounded.
+  - **KV-cache tiering:** llama.cpp's RAM tier (`cache_ram`) keeps evicted prompt caches.
+  - **Measured on CPU:** warm time to first token went from 1.21 s to 0.08 s with prefix routing (round-robin for comparison), and from 3.53 s to 0.12 s with the RAM tier.
+
+  (ADR 0046)
+- **Hardware profile and placement (HAL v1):**
+  - **What it reads:** at startup, the server reads the CPU (cores, AVX-512, AMX, SVE…), memory, NUMA nodes, CXL memory, disks, GPUs and coherent CPU-GPU memory.
+  - **What it sizes from them:**
+    - the key-value cache: a sixteenth of memory, where it was 8 MB;
+    - vector precision: a new `--vector-quantization auto` default, which uses int8 only when vectors outgrow a quarter of memory;
+    - llama.cpp threads and NUMA spreading.
+  - **Warnings:** about slow disks.
+  - **Seeing it:** `aiapp hardware` shows the profile and where each kind of data goes. `--profile gpu-server` (and other emulated machines) previews hardware you don't have, and `AIAPP_HAL_PROFILE` makes a server use one.
+
+  (ADR 0045)
+- **External stores:**
+  - **Choosing them:** set `storage:` in `ai-app.yaml`. Key-value data (`app.kv`, chat memory and workflow state) can live in Redis, and vectors (`app.vectors` and indexed documents) in PostgreSQL/pgvector or Azure AI Search.
+  - **What doesn't change:** handlers. Stores are checked when the app is deployed, and an unreachable one fails the deploy.
+  - **Tested:** against real Redis 7.4 and PostgreSQL 17 with pgvector. Azure AI Search is tested against a fake of its API.
+
+  (ADR 0044)
+- **Kafka and Azure Event Hubs bridges:**
+  - **Declaring them:** under `kafka:` in `ai-app.yaml`. A source brings a Kafka topic's records into an app topic, where subscriptions handle them. A sink sends an app topic out.
+  - **Signing in:** TLS, SASL PLAIN or SCRAM, or an Event Hubs connection string. Credentials come from `${SECRET}` references.
+  - **Delivery:** at least once, in order per partition, resuming after restarts. Quotas and event guardrails apply.
+  - **Status:** `aiapp kafka APP` shows each bridge's state, records moved and errors.
+  - **Tested:** against franz-go's fake cluster in CI and against a real Apache Kafka 3.9.0. Event Hubs itself is not yet tested.
+
+  (ADR 0043)
+- **Redis protocol:**
+  - **Turning it on:** `aiapp serve --resp-addr 127.0.0.1:6379`. RESP2 and RESP3 and pipelining are supported, with optional TLS.
+  - **What clients see:** Redis clients (`redis-cli`, redis-py, node-redis, go-redis…) sign in with `AUTH <app> <api-key>` and work with that app's data, the same data `app.kv` sees. The key needs the new `kv` role.
+  - **Commands:** strings, counters, expiry, hashes, lists, sets and sorted sets. Unsupported commands say why.
+  - **Limits:** quotas and value limits apply.
+
+  (ADR 0042)
+- **Local models (llama.cpp and vLLM):**
+  - **What it does:** the server runs inference engines itself and supervises them. They start with the server, restart when they crash, wait while loading and stop with the server.
+  - **Declaring them:** under `local:` in `gateway.yaml`.
+  - **Using them:** apps call them with `provider: local`, or through logical models. Switching an app between hosted and local is then a `gateway.yaml` change only.
+  - **Model store:** `aiapp model pull` downloads from a small catalog of Apache-2.0 models, or any GGUF with `--url` and `--sha256`, and checks the SHA-256. `aiapp model import` adds a model on an offline server, `aiapp model list` shows models and their states, and `aiapp model rm` deletes one.
+  - **GPUs:** each model gets its own GPU set (`gpus`, `gpu_ids`, `gpu_memory`), found with `nvidia-smi` or listed with `AIAPP_GPUS`. vLLM gets tensor parallelism over them.
+  - **Docker image:** includes llama.cpp (`b12193`, checksum-verified).
+  - **Tested:** on CPU with real models: chat, streaming, structured output, tool calling, embeddings and search, the hosted-to-local switch, and crash restarts.
+  - **Not yet tested:** the GPU and vLLM paths have not run on GPU hardware.
+
+  (ADR 0041)
+- **JavaScript handlers (Node.js runtime):**
+  - **Turning it on:** `runtime: node` runs an app's handlers in Node.js, through the same worker protocol as Python.
+  - **The SDK:** `@aiapp-server/server` has the Python SDK's features: models and agents with tools, KV, memory, vectors, SQL, jobs, durable workflows with approvals, events, plugin guardrails and spans. It ships inside the server.
+  - **npm dependencies:** they come from the app's `package-lock.json` (`npm ci`) and are cached by lockfile.
+  - **Starter:** `aiapp new node-app NAME`.
+  - **Images:** the Docker images include Node 22; elsewhere, use `--node` or `AIAPP_NODE`.
+  - **Conformance:** a suite runs the same tests against one app written in both languages.
+
+  (ADR 0040)
 - **npm package name:** the JS SDK is published as `@aiapp-server/client`; the `@aiapp` scope on npm belongs to someone else.
 
 ## v1.1.0 (2026-11-23)

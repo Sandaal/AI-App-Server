@@ -7,7 +7,7 @@ The Helm chart is in the [public repository](https://github.com/Sandaal/ai-app-s
 ```bash
 git clone --depth 1 https://github.com/Sandaal/ai-app-server.git
 helm install ai ./ai-app-server/deploy/helm/aiapp-server \
-  --set image.repository=ghcr.io/sandaal/aiapp-server --set image.tag=1.1.0 \
+  --set image.repository=ghcr.io/sandaal/aiapp-server --set image.tag=3.0.0 \
   --set secretEnv.OPENAI_API_KEY=sk-...
 kubectl exec -it ai-aiapp-server-0 -- aiapp apps
 ```
@@ -18,7 +18,7 @@ The chart runs **one** server as a StatefulSet with a persistent volume, because
 
 ```yaml
 # values.yaml
-image: { repository: ghcr.io/sandaal/aiapp-server, tag: "1.1.0" }
+image: { repository: ghcr.io/sandaal/aiapp-server, tag: "3.0.0" }
 
 masterKey:
   existingSecret: aiapp-master-key     # kubectl create secret generic aiapp-master-key --from-file=master.key

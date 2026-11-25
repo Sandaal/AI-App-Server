@@ -31,7 +31,7 @@ The quickest way is the installer for your platform ([Windows](install/windows.m
 === "Windows"
 
     ```powershell
-    (Get-FileHash .\aiapp_1.1.0_windows_amd64.zip -Algorithm SHA256).Hash
+    (Get-FileHash .\aiapp_3.0.0_windows_amd64.zip -Algorithm SHA256).Hash
     # compare with the line for that file in SHA256SUMS
     ```
 

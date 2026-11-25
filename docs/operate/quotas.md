@@ -30,5 +30,5 @@ aiapp quota set hr-bot --storage 2GB --vectors 500k --concurrency 50 --worker-me
 ## Sizing
 
 - One app served 75–95 streamed answers per second with no errors in measurements; the server adds almost nothing to the model's own time.
-- Memory: about 2 GB for a few small apps. Large document sets: `aiapp serve --vector-quantization int8` stores vectors in a quarter of the memory.
+- Memory: about 2 GB for a few small apps. Large document sets: vectors switch to int8 by themselves when they outgrow a quarter of memory (see [Hardware](hardware.md)); `--vector-quantization int8` forces it.
 - Workers: `workers:` in each app (default 2) sets how many Python processes serve it.

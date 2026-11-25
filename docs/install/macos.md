@@ -31,8 +31,8 @@ Data goes to `~/.aiapp`. Use a second terminal for other commands.
 
 | Option | Command |
 |---|---|
-| A specific version | `sh install.sh --version v1.1.0` |
-| Offline install | `sh install.sh --archive aiapp_1.1.0_darwin_arm64.tar.gz` with `SHA256SUMS` in the same folder |
+| A specific version | `sh install.sh --version v3.0.0` |
+| Offline install | `sh install.sh --archive aiapp_3.0.0_darwin_arm64.tar.gz` with `SHA256SUMS` in the same folder |
 | By hand | unpack the archive; if macOS blocks the unsigned binary, run `xattr -d com.apple.quarantine ./aiapp` |
 
 !!! tip "Free local models on a Mac"

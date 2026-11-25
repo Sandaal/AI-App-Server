@@ -1,0 +1,28 @@
+{
+  "name": "@aiapp-server/server",
+  "version": "3.0.0",
+  "description": "Write AI App Server handlers in JavaScript or TypeScript: the Node.js worker runtime and SDK (app.models, app.kv, app.vectors, jobs, events, workflows, guardrails).",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" } },
+  "files": ["dist"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "proto": "node scripts/gen-proto.mjs",
+    "build": "npm run proto && tsc -p . && esbuild src/runtime.ts --bundle --platform=node --format=esm --target=node20 --minify --legal-comments=none --banner:js=\"import { createRequire as __cr } from 'module'; const require = __cr(import.meta.url);\" --outfile=dist/aiapp-runtime.mjs",
+    "typecheck": "tsc -p . --noEmit",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "1.12.5",
+    "@grpc/proto-loader": "0.7.13"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "esbuild": "0.25.12",
+    "protobufjs": "7.4.0",
+    "typescript": "5.9.3"
+  }
+}

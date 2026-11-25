@@ -6,7 +6,8 @@ Every app has one. Your editor can check it: `aiapp schema` prints its JSON Sche
 app: hr-bot                 # name: 2-63 lowercase letters, digits or hyphens; the URL is /apps/hr-bot/
 version: "1.2.0"            # your version label; every deploy also gets a number
 blueprint: knowledge-chat   # optional: a ready-made app type
-workers: 2                  # Python worker processes for this app
+runtime: python3.12         # or node: handlers in JavaScript (see JavaScript handlers)
+workers: 2                  # worker processes for this app
 rate_limit: 600             # requests per minute per client (optional)
 
 models:                     # model names your app uses: app.models.chat, app.models.embedding
@@ -53,13 +54,15 @@ ui: chat-widget             # built-in page, or a folder of your own: ui: ./ui
 |---|---|
 | `models` | [Model providers](../install/models.md) |
 | `sources` | [Documents and connectors](documents.md) |
-| `routes` | [Python handlers](handlers.md) |
+| `routes`, `runtime` | [Python handlers](handlers.md), [JavaScript handlers](node.md) |
 | `jobs`, `cron`, `topics`, `subscriptions` | [Jobs, schedules and events](jobs-events.md) |
 | `guardrails`, `guardrail_mode` | [Guardrails](guardrails.md) |
 | `mcp`, `agent` | [Agents, tools and MCP](agents.md) |
 | `mcp_server` | [Publish apps to AI agents](mcp-server.md) |
 | `auth`, `cors` | [Sign-in](../operate/sign-in.md), [Pages](web.md) |
 | `ui` | [Pages and web components](web.md) |
+| `cluster` | [Clusters](../operate/cluster.md#placement-and-routing) |
+| `confidential` | [Confidential apps](../operate/confidential.md) |
 | `insights`, `support`, `summary`, `classification`, `meeting_notes`, `content` | [Blueprint settings](blueprints.md) |
 
 ## Values from secrets

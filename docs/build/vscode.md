@@ -12,7 +12,7 @@ The AI App Server extension adds:
 Download `aiapp-vscode-VERSION.vsix` from the [Download](../download.md) page, then:
 
 ```bash
-code --install-extension aiapp-vscode-1.1.0.vsix
+code --install-extension aiapp-vscode-3.0.0.vsix
 ```
 
 or in VS Code: Extensions view → `…` menu → *Install from VSIX…*.

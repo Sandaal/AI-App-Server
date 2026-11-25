@@ -3,3 +3,10 @@ Copyright 2026 Sandaal and the AI App Server contributors
 
 This product is licensed under the Apache License, Version 2.0.
 See the LICENSE file for details.
+
+The container image also includes:
+- llama.cpp (llama-server and its libraries, in /opt/llama), MIT License,
+  Copyright (c) 2023-2026 The ggml authors. Its license is /opt/llama/LICENSE.
+- Node.js (in /usr/local), MIT License and the licenses of its bundled
+  dependencies, Copyright Node.js contributors. Its license is
+  /usr/local/share/doc/node/LICENSE (npm's: /usr/local/lib/node_modules/npm/LICENSE).

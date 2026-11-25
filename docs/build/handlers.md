@@ -2,6 +2,9 @@
 
 A handler is a Python function named in `ai-app.yaml` as `module:function`. It can be `async` (recommended) or plain.
 
+!!! tip "Prefer JavaScript?"
+    With `runtime: node`, handlers are JavaScript functions with the same features. See [JavaScript handlers](node.md).
+
 ```yaml
 routes:
   - { path: /ask, handler: "handlers:ask", stream: true }

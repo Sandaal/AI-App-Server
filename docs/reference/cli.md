@@ -7,7 +7,8 @@
 ```
 aiapp serve [--addr 127.0.0.1:8080] [--data-dir ~/.aiapp] [--apps-dir DIR] [--env prod]
             [--public-url https://ai.example.com] [--metrics-addr 127.0.0.1:9464]
-            [--worker-memory 2GB] [--worker-max-file 1GB] [--vector-quantization int8]
+            [--worker-memory 2GB] [--worker-max-file 1GB] [--vector-quantization auto|int8|none]
+            [--data-plane auto|host|dpu] [--vector-cold-after 24h] [--key-broker URL]
             [--python PATH] [--wheelhouse DIR] [--log-level info]
             [--gateway FILE] [--console-config FILE] [--audit-export FILE]
 aiapp health                          check the server answers
@@ -19,6 +20,7 @@ aiapp version
 | Command | What it does |
 |---|---|
 | `aiapp new BLUEPRINT NAME [--provider P]` | create an app from a [blueprint](../build/blueprints.md); providers `openai`, `azure-openai`, `anthropic`, `gemini`, `bedrock`, `ollama` |
+| `aiapp new node-app NAME [--provider P]` | a [JavaScript app](../build/node.md) (`runtime: node`) |
 | `aiapp deploy [DIR] [--env prod]` | deploy a new version (zero downtime) |
 | `aiapp dev [DIR]` | serve the folder and redeploy on every save |
 | `aiapp apps [--json]` | list deployed apps |
@@ -64,6 +66,10 @@ aiapp version
 | `aiapp quota [APP]` · `aiapp quota set APP\|--default ...` | [quotas](../operate/quotas.md) |
 | `aiapp audit [--app A] [--type T] [--subject S] [--since 24h] [--json]` · `aiapp audit export` | [audit log](../operate/audit.md) |
 | `aiapp gateway [reload]` | model deployments, health, cache; re-read `gateway.yaml` |
+| `aiapp cluster status\|init\|token\|join ADDR --token T\|leave\|remove NODE` | the [cluster](../operate/cluster.md): members, leader, health |
+| `aiapp hardware [--profile P] [--save F] [--json]` | the machine's capabilities and the [placement plan](../operate/hardware.md) |
+| `aiapp kafka [APP]` | the app's [Kafka bridges](../build/kafka.md): state, records moved, last error |
+| `aiapp model list [--catalog]` · `pull NAME [--url U --sha256 H]` · `import NAME PATH` · `rm NAME` | [local models](../install/local-models.md): engines, stored models, GPUs |
 
 ## Backups and offline
 

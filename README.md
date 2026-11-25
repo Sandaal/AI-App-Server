@@ -6,6 +6,12 @@
 
 ⬇️ **Download: [latest release](https://github.com/Sandaal/ai-app-server/releases/latest)** (Windows, macOS, Linux, VS Code extension) · Docker: `ghcr.io/sandaal/aiapp-server`
 
+## Status: v3.0.0, and help wanted
+
+The single-server runtime, the ten blueprints, local models and clusters are tested on real systems. The newest features, for GPUs, DPUs, CXL memory and confidential VMs, are tested on **emulated hardware only**, and the hosted model and Azure integrations against fakes of their APIs. **[Project status](https://sandaal.github.io/ai-app-server/status/)** lists exactly what was tested how.
+
+If you can lend hardware access or cloud credits (GPU servers, BlueField DPUs, CXL memory, SEV-SNP/TDX confidential VMs, Azure), please [open a hardware offer](https://github.com/Sandaal/ai-app-server/issues/new?template=hardware-offer.yml).
+
 ## Install
 
 **Windows** (PowerShell):

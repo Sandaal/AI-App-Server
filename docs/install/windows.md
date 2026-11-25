@@ -44,8 +44,8 @@ Your data goes to `%USERPROFILE%\.aiapp`. Leave the window open and use a second
 | Option | Command |
 |---|---|
 | Start automatically when you sign in | `powershell -ExecutionPolicy Bypass -File install.ps1 -Service` |
-| A specific version | `... install.ps1 -Version v1.1.0` |
-| Offline install | download the zip and `SHA256SUMS` from [Download](../download.md), then `... install.ps1 -Archive .\aiapp_1.1.0_windows_amd64.zip` |
+| A specific version | `... install.ps1 -Version v3.0.0` |
+| Offline install | download the zip and `SHA256SUMS` from [Download](../download.md), then `... install.ps1 -Archive .\aiapp_3.0.0_windows_amd64.zip` |
 | By hand | unzip anywhere and add the folder with `aiapp.exe` to your PATH |
 
 ## Serve other machines

@@ -144,6 +144,29 @@
       },
       "type": "object"
     },
+    "cluster": {
+      "additionalProperties": false,
+      "description": "In a cluster: how many nodes run the app's workers (nodes: N, the leader included; default every node).",
+      "properties": {
+        "nodes": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "confidential": {
+      "additionalProperties": false,
+      "description": "Run only on nodes with hardware attestation (SEV-SNP, TDX): confidential: {} or { measurements: [hex, ...] }; with a key broker, the app's data key is released only to them.",
+      "properties": {
+        "measurements": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "content": {
       "additionalProperties": false,
       "properties": {
@@ -408,6 +431,82 @@
       },
       "type": "array"
     },
+    "kafka": {
+      "description": "Bridges between external Kafka or Azure Event Hubs topics and the app's topics (source: in, sink: out).",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "brokers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "ca_file": {
+            "type": "string"
+          },
+          "event_hubs": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sasl": {
+            "additionalProperties": false,
+            "properties": {
+              "mechanism": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "sink": {
+            "additionalProperties": false,
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "start": {
+                "type": "string"
+              },
+              "topic": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "source": {
+            "additionalProperties": false,
+            "properties": {
+              "group": {
+                "type": "string"
+              },
+              "into": {
+                "type": "string"
+              },
+              "start": {
+                "type": "string"
+              },
+              "topic": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "tls": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
     "mcp": {
       "description": "MCP servers whose tools handlers and agents can call.",
       "items": {
@@ -596,7 +695,7 @@
       "type": "array"
     },
     "runtime": {
-      "description": "Python version for handlers, e.g. python3.12.",
+      "description": "Handler language: python3.12 (default) or node for JavaScript handlers.",
       "type": "string"
     },
     "sources": {
@@ -788,6 +887,43 @@
         "type": "object"
       },
       "type": "array"
+    },
+    "storage": {
+      "additionalProperties": false,
+      "description": "Keep the app's data in external systems: kv in Redis, vectors in PostgreSQL/pgvector or Azure AI Search.",
+      "properties": {
+        "kv": {
+          "additionalProperties": false,
+          "properties": {
+            "redis": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "vectors": {
+          "additionalProperties": false,
+          "properties": {
+            "azure_ai_search": {
+              "additionalProperties": false,
+              "properties": {
+                "api_key": {
+                  "type": "string"
+                },
+                "endpoint": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "pgvector": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
     },
     "subscriptions": {
       "description": "Handlers that receive each record of a topic, in order.",

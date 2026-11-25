@@ -1,0 +1,53 @@
+name: Hardware offer
+description: Offer access to hardware, cloud credits or a service account for testing AI App Server
+title: "Hardware offer: "
+labels: [hardware-offer]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you! [Project status](https://sandaal.github.io/ai-app-server/status/) lists what we need and why.
+        **Don't post passwords, keys or other credentials here.** We'll arrange access privately.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What are you offering?
+      multiple: true
+      options:
+        - GPU server (NVIDIA or AMD)
+        - Confidential VM (AMD SEV-SNP or Intel TDX)
+        - Server with an NVIDIA BlueField DPU
+        - Server with CXL memory
+        - Multi-socket server, or Grace Hopper / Grace Blackwell
+        - Standard cloud VM
+        - Cloud credits (Azure, AWS, Google Cloud)
+        - Hosted model API credits
+        - Other
+    validations: { required: true }
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Model, size and count (for example "2× H100 80 GB" or "BlueField-3 with DOCA 2.x"), and where it runs (cloud region or on-premises).
+    validations: { required: true }
+  - type: dropdown
+    id: how
+    attributes:
+      label: How could we use it?
+      options:
+        - Remote access for us to run the tests
+        - You run the tests yourself and share the results
+        - Credits or an account we can use
+        - Not sure yet
+    validations: { required: true }
+  - type: input
+    id: when
+    attributes:
+      label: For how long, and when?
+      placeholder: "for example: 3 days, any time in January"
+  - type: textarea
+    id: profile
+    attributes:
+      label: Hardware profile (optional)
+      description: Output of `aiapp hardware --json`, if you've installed the server there. Read it before posting; it lists CPU, memory, disk, GPU and PCI details and no data.
+      render: json

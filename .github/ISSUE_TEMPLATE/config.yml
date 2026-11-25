@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Project status and help wanted
+    url: https://sandaal.github.io/ai-app-server/status/
+    about: What is tested on real hardware, what is emulated, and what we need.
+  - name: Report a security issue
+    url: https://github.com/Sandaal/ai-app-server/blob/main/SECURITY.md
+    about: Please don't open public issues for vulnerabilities.

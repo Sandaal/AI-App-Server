@@ -9,13 +9,13 @@ On a connected machine, download the archive for the target platform and `SHA256
 === "Linux / macOS"
 
     ```bash
-    sh install.sh --archive aiapp_1.1.0_linux_amd64.tar.gz
+    sh install.sh --archive aiapp_3.0.0_linux_amd64.tar.gz
     ```
 
 === "Windows"
 
     ```powershell
-    powershell -ExecutionPolicy Bypass -File install.ps1 -Archive .\aiapp_1.1.0_windows_amd64.zip
+    powershell -ExecutionPolicy Bypass -File install.ps1 -Archive .\aiapp_3.0.0_windows_amd64.zip
     ```
 
 ## 2. Bring the Python packages
@@ -36,4 +36,6 @@ The server then installs only from that folder.
 
 ## 3. Models
 
-Use a model server inside your network: a local [Ollama](https://ollama.com), vLLM, or an Azure OpenAI private endpoint. Point apps at it with `provider: openai-compatible` and `endpoint:`, see [Model providers](models.md).
+The simplest choice is to let the server run the models itself. Copy a GGUF file over, add it with `aiapp model import NAME FILE --sha256 …`, and use it with `provider: local`. The Docker image includes llama.cpp. See [Local models](local-models.md).
+
+Or use a model server inside your network: a local [Ollama](https://ollama.com), vLLM, or an Azure OpenAI private endpoint. Point apps at it with `provider: openai-compatible` and `endpoint:`, see [Model providers](models.md).

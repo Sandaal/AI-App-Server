@@ -4,7 +4,7 @@ Handlers are plain functions named in ai-app.yaml (``handler: handlers:chat``).
 They take a :class:`Request` and return a value, or yield values to stream.
 """
 
-__version__ = "1.1.0"
+__version__ = "3.0.0"
 
 from aiapp.app import AgentResult, KVError, Lease, LeaseHeld, ModelError, QuotaExceeded, SQLError, Tool, app  # noqa: E402
 from aiapp.host import set_metadata  # noqa: E402

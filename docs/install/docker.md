@@ -1,6 +1,6 @@
 # Run with Docker
 
-The image is `ghcr.io/sandaal/aiapp-server` for amd64 and arm64. Tags: `latest`, a minor line such as `1.1`, or an exact version such as `1.1.0`.
+The image is `ghcr.io/sandaal/aiapp-server` for amd64 and arm64. Tags: `latest`, a minor line such as `3.0`, or an exact version such as `3.0.0`.
 
 ## Start a server
 
@@ -9,7 +9,7 @@ docker run -d --name aiapp -p 8080:8080 \
   -v aiapp-data:/data \
   -v "$PWD/my-apps:/apps:ro" \
   -e OPENAI_API_KEY=sk-... \
-  ghcr.io/sandaal/aiapp-server:1.1
+  ghcr.io/sandaal/aiapp-server:3.0
 ```
 
 | Path | What it is |
@@ -32,7 +32,7 @@ docker exec -it aiapp aiapp secret set ANTHROPIC_API_KEY
 ```yaml
 services:
   aiapp:
-    image: ghcr.io/sandaal/aiapp-server:1.1
+    image: ghcr.io/sandaal/aiapp-server:3.0
     ports: ["8080:8080"]
     volumes:
       - aiapp-data:/data
@@ -46,7 +46,7 @@ volumes:
 ## Ship your apps in your own image
 
 ```dockerfile
-FROM ghcr.io/sandaal/aiapp-server:1.1
+FROM ghcr.io/sandaal/aiapp-server:3.0
 COPY my-apps/ /apps/
 ```
 

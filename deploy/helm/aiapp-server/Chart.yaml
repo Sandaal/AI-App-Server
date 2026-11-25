@@ -2,8 +2,8 @@ apiVersion: v2
 name: aiapp-server
 description: AI App Server - deploy AI apps (RAG chat, extraction, agents, workflows) from ai-app.yaml manifests.
 type: application
-version: 1.1.0
-appVersion: "1.1.0"
+version: 3.0.0
+appVersion: "3.0.0"
 home: https://github.com/Sandaal/ai-app-server
 sources: ["https://github.com/Sandaal/ai-app-server"]
 keywords: [ai, llm, rag, agents]

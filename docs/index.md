@@ -55,6 +55,14 @@ cd hr-bot && aiapp source add ./policies/ && aiapp deploy
 
     [github.com/Sandaal/ai-app-server](https://github.com/Sandaal/ai-app-server) · [What's there](reference/repository.md)
 
+-   **Status and help wanted**
+
+    ---
+
+    What is tested on real systems, what only on emulated hardware or fakes, and the hardware we need to verify the rest.
+
+    [Project status](status.md)
+
 </div>
 
 ## What you get

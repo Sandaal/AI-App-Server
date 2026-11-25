@@ -1,6 +1,6 @@
 [project]
 name = "aiapp"
-version = "1.1.0"
+version = "3.0.0"
 description = "Python SDK and worker runtime for AI App Server"
 requires-python = ">=3.10"
 license = "Apache-2.0"

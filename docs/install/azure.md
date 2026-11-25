@@ -9,7 +9,7 @@ Two [Azure Developer CLI (azd)](https://learn.microsoft.com/azure/developer/azur
 
 ## Steps
 
-1. Push the server image to your registry (or use `ghcr.io/sandaal/aiapp-server:1.1`).
+1. Push the server image to your registry (or use `ghcr.io/sandaal/aiapp-server:3.0`).
 2. `git clone https://github.com/Sandaal/ai-app-server.git`, then put your app folders in the template's `apps/` folder (`deploy/azd/container-apps/apps/` or `deploy/azd/aks/apps/`).
 3. Read the template's `azure.yaml`, then:
 

@@ -18,6 +18,7 @@ Environment variables work too (`OPENAI_API_KEY=… aiapp serve`, or `/etc/aiapp
 | Google Gemini | `gemini` | `GEMINI_API_KEY` |
 | AWS Bedrock | `bedrock` | `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` |
 | Ollama (local, free) | `ollama` | none; first run `ollama pull llama3.2 && ollama pull nomic-embed-text` |
+| Local models run by the server (llama.cpp, vLLM) | `provider: local`, see [Local models](local-models.md) | none |
 | vLLM, LM Studio, other OpenAI-compatible | edit `ai-app.yaml` | depends on the server |
 
 ## In an app
@@ -68,4 +69,61 @@ prices:
   anthropic/claude-haiku-5-5: { input: 1.0, output: 5.0 }    # USD per million tokens
 ```
 
-Apps then refer to the logical name: `models: { chat: { use: chat } }`. After editing, run `aiapp gateway reload`. `aiapp gateway` shows each deployment's health (circuit breakers) and the cache.
+Several inference servers of your own (for example vLLM instances) can share one logical model with `routing: prefix`. Requests that share a prompt prefix (a conversation, or the same long system prompt) then go to the same server, which reuses its KV cache:
+
+```yaml
+deployments:
+  vllm-a: { provider: openai-compatible, model: llama-3.1-8b, endpoint: "http://gpu-a:8000/v1" }
+  vllm-b: { provider: openai-compatible, model: llama-3.1-8b, endpoint: "http://gpu-b:8000/v1" }
+models:
+  chat: { targets: [vllm-a, vllm-b], routing: prefix }
+```
+
+Apps then refer to the logical name: `models: { chat: { use: chat } }`. After editing, run `aiapp gateway reload`. `aiapp gateway` shows each deployment's health (circuit breakers), its measured time to first token, the calls it has in progress, and the cache.
+
+### Routing by request, latency and cost
+
+One logical model can mix hardware and providers: a small model on CPUs, a local GPU model, a hosted model and an engine built for long contexts. The gateway then sends each request to the deployment that suits it.
+
+**Conditions** on a deployment limit the requests it takes:
+
+| Setting | The deployment takes |
+|---|---|
+| `max_prompt_tokens: N` | prompts up to about N tokens (its context window) |
+| `min_prompt_tokens: N` | only prompts of at least N tokens (long-context engines, prefill-heavy work) |
+| `max_output_tokens: N` | only requests that set `max_tokens` to N or less (classification, extraction) |
+
+Prompts are estimated at four characters a token. A request no deployment takes fails with an error that says how long it was.
+
+**Routing strategies:**
+
+| `routing:` | Picks |
+|---|---|
+| `weighted` (default) | at random, by `weight` |
+| `prefix` | the same deployment for requests that share a prompt prefix |
+| `latency` | the deployment predicted to answer first: its measured time to first token, times the calls it is already serving |
+| `cost` | the cheapest deployment predicted to answer within `latency_target_ms`, and the fastest if none can |
+
+```yaml
+deployments:
+  classify: { provider: local, model: qwen-0.5b, max_prompt_tokens: 2000, max_output_tokens: 16 }
+  local:    { provider: local, model: qwen-7b, max_prompt_tokens: 8000 }
+  hosted:   { provider: openai, model: gpt-4o-mini }
+  longctx:  { provider: openai-compatible, model: llama-3.1-70b, endpoint: "http://dynamo:8000/v1", min_prompt_tokens: 8001 }
+models:
+  chat: { targets: [classify, local, hosted, longctx], routing: cost, latency_target_ms: 1500 }
+prices:
+  openai/gpt-4o-mini: { input: 0.15, output: 0.6 }
+```
+
+With this setup:
+
+- a short classification goes to the small model;
+- a prompt over 8,000 tokens goes to the long-context engine;
+- other chats go to the free local model while it answers within 1.5 seconds. When requests queue on it, they go to the hosted model.
+
+Deployments without a price count as free, so give hosted ones their `prices:`. A deployment that hasn't been measured yet is tried and measured first.
+
+**Budgets:** when an app has used 80% of a daily or monthly model budget (`aiapp quota set APP --daily-usd …`), its `cost`-routed models take the cheapest deployment even if it misses the latency target.
+
+**Prefill/decode-split engines** (NVIDIA Dynamo, vLLM's disaggregated serving, llm-d) do their split inside the engine. Add each engine's OpenAI-compatible endpoint as a deployment, and use conditions to send it the requests it is built for.

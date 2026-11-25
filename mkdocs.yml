@@ -49,6 +49,7 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Status and help wanted: status.md
   - Get started:
       - get-started/index.md
       - How it works: get-started/how-it-works.md
@@ -63,6 +64,7 @@ nav:
       - Azure: install/azure.md
       - Offline servers: install/offline.md
       - Model providers: install/models.md
+      - Local models: install/local-models.md
       - Upgrade and uninstall: install/upgrade.md
   - Build apps:
       - build/index.md
@@ -73,10 +75,14 @@ nav:
       - The ai-app.yaml file: build/manifest.md
       - Documents and connectors: build/documents.md
       - Python handlers: build/handlers.md
+      - JavaScript handlers: build/node.md
       - Storage, memory and search: build/storage.md
+      - Redis clients: build/redis.md
+      - External stores: build/external-stores.md
       - Agents, tools and MCP: build/agents.md
       - Workflows and approvals: build/workflows.md
       - Jobs, schedules and events: build/jobs-events.md
+      - Kafka and Event Hubs: build/kafka.md
       - Guardrails: build/guardrails.md
       - Pages and web components: build/web.md
       - Call apps from your code: build/clients.md
@@ -94,6 +100,9 @@ nav:
       - Audit log and SIEM: operate/audit.md
       - Monitoring: operate/monitoring.md
       - Quotas and limits: operate/quotas.md
+      - Hardware: operate/hardware.md
+      - Clusters: operate/cluster.md
+      - Confidential apps: operate/confidential.md
       - Versions and rollback: operate/versions.md
       - Backups and restore: operate/backups.md
       - Troubleshooting: operate/troubleshooting.md
