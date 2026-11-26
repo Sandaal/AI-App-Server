@@ -175,3 +175,8 @@
   .hero h1 { font-size: 2.1rem; }
   .hero h1 br { display: none; }
 }
+
+/* ---------- Demo GIF ---------- */
+.md-typeset figure.demo { margin: 1.6rem auto 0.5rem; max-width: 100%; }
+.md-typeset figure.demo img { border-radius: var(--aiapp-radius); box-shadow: 0 14px 40px rgba(30, 30, 80, 0.25); }
+.md-typeset figure.demo figcaption { font-size: 0.7rem; color: var(--md-default-fg-color--light); }

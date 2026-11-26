@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Demo GIF** on the README and the docs home page, recorded from a real run (`scripts/demo/record.sh`: the server and a local Ollama model, each in a container). The docs site also gets a social preview image for shared links.
 - **Docs site home page** rebuilt as a landing page: the problem it solves, a comparison with the usual stack, three steps to a live app, the ten blueprints, production features, measured numbers and who it's for. There is a new Performance and sizing page, and the FAQ is up to date (JavaScript handlers, clusters). The public README follows the same story.
 
 ## v3.0.0 (2026-11-25)

@@ -1,4 +1,15 @@
 {% extends "base.html" %}
+{% block extrahead %}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AI App Server">
+  <meta property="og:title" content="{% if page and page.is_homepage %}AI App Server: ship AI apps, not infrastructure{% else %}{{ page.title | striptags }} · AI App Server{% endif %}">
+  <meta property="og:description" content="{{ config.site_description }}">
+  <meta property="og:image" content="{{ config.site_url }}assets/social-preview.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{{ config.site_url }}assets/social-preview.png">
+{% endblock %}
 {% block announce %}
 <strong>v3.0 is out:</strong> JavaScript handlers, local models, clusters, and model routing by latency and cost.
 <a href="{{ config.site_url }}status/">See what's tested, and how you can help</a>
