@@ -19,7 +19,7 @@ Vector search, memory, jobs, a model gateway, guardrails, sign-in and audit are 
 ---
 
 <p align="center"><img src="docs/assets/demo.gif" alt="From aiapp new to a chat that answers from your documents with sources, in three commands" width="820"></p>
-<p align="center"><sub>A real run: a local model on CPU via Ollama, with waits shortened.</sub></p>
+<p align="center"><sub>A real run: a local model on CPU via Ollama, with waits shortened. · <a href="https://sandaal.github.io/ai-app-server/videos/">Walkthrough videos</a> (3 to 5 minutes each)</sub></p>
 
 ```bash
 aiapp new knowledge-chat hr-bot --provider openai   # a complete app, ready to run

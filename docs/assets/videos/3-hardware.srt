@@ -1,0 +1,164 @@
+1
+00:00:00,900 --> 00:00:07,556
+Where should AI apps run? On a laptop, a CPU server, GPUs, or the next generation of hardware?
+
+2
+00:00:07,936 --> 00:00:13,248
+AI App Server is designed to run on all of them, and to size itself to the machine it finds.
+
+3
+00:00:13,628 --> 00:00:18,727
+In this video, we'll be clear about what's tested on real machines, and what's still in preview.
+
+4
+00:00:19,807 --> 00:00:23,348
+The first two items on this slide run on real machines today.
+
+5
+00:00:23,728 --> 00:00:28,187
+The three marked preview are built, and tested on emulated hardware so far.
+
+6
+00:00:29,267 --> 00:00:40,104
+At startup, the server reads the machine: CPU cores and instruction sets, memory and NUMA nodes, CXL memory, disks, GPUs, and data processors.
+
+7
+00:00:40,484 --> 00:00:45,647
+aiapp hardware shows what it found. This is a real run, on an eight-core laptop.
+
+8
+00:00:46,027 --> 00:00:54,176
+It also reports that this isn't a confidential VM, and that no data processor was found, so the CPUs do the data path.
+
+9
+00:00:55,256 --> 00:00:57,069
+From that, it sizes itself.
+
+10
+00:00:57,449 --> 00:01:02,911
+The key-value cache takes a sixteenth of memory, between sixty-four megabytes and eight gigabytes.
+
+11
+00:01:03,291 --> 00:01:10,907
+Vectors stay full precision while they fit in a quarter of memory, and switch to eight-bit above that, with scores within about one hundredth.
+
+12
+00:01:11,287 --> 00:01:15,212
+Local model threads follow the physical cores and the NUMA layout.
+
+13
+00:01:15,592 --> 00:01:24,637
+And each kind of data has a preferred list of tiers, from GPU memory down to NVMe, so the server uses the best one the machine has.
+
+14
+00:01:25,717 --> 00:01:27,595
+You don't need a GPU to start.
+
+15
+00:01:27,975 --> 00:01:32,732
+Local models run on CPU, with llama.cpp, or through Ollama.
+
+16
+00:01:33,112 --> 00:01:42,179
+So a laptop, or a server on a fully offline network, can run AI apps. The demo in this series ran a three-billion-parameter model this way.
+
+17
+00:01:42,559 --> 00:01:50,324
+Context memory keeps each conversation's computed prompt, so follow-up questions on long contexts answer much faster.
+
+18
+00:01:50,704 --> 00:01:59,707
+In our CPU benchmark, prefix-aware routing cut the warm time to first token from about one point two seconds to under a tenth of a second.
+
+19
+00:02:00,087 --> 00:02:04,503
+On GPU servers, the same file runs models with vLLM.
+
+20
+00:02:05,583 --> 00:02:10,020
+For GPU servers, the server runs and supervises vLLM.
+
+21
+00:02:10,400 --> 00:02:13,877
+Here is what it sees on an emulated eight-GPU server.
+
+22
+00:02:14,257 --> 00:02:21,319
+Each model gets its own GPUs, with tensor parallelism across them, and each engine sees only its own.
+
+23
+00:02:21,699 --> 00:02:27,757
+If the GPUs can't hold every model, the change is refused, with a message saying what's free.
+
+24
+00:02:28,137 --> 00:02:35,476
+This is preview: tested on emulated GPUs. Real GPU numbers are exactly what we need hardware for.
+
+25
+00:02:36,556 --> 00:02:41,612
+Next: CXL memory, which adds capacity on memory-only NUMA nodes.
+
+26
+00:02:41,992 --> 00:02:53,555
+The server keeps hot vector collections in DRAM, lets the kernel tier warm ones onto CXL, and moves unused collections to encrypted files on disk, loading them back on demand.
+
+27
+00:02:53,935 --> 00:02:55,385
+Then data processors.
+
+28
+00:02:55,765 --> 00:03:02,976
+The server detects BlueField cards, and runs encryption, checksums and TLS behind one data-plane driver.
+
+29
+00:03:03,356 --> 00:03:14,343
+The BlueField driver itself isn't built yet. It needs a real card and NVIDIA's DOCA SDK. Until then, the host CPUs do this work, and the server says why.
+
+30
+00:03:15,423 --> 00:03:17,343
+Finally: confidential apps.
+
+31
+00:03:17,723 --> 00:03:27,600
+Mark an app confidential, and it runs only on servers that prove, with AMD SEV-SNP or Intel TDX attestation, what they're running on.
+
+32
+00:03:27,980 --> 00:03:30,519
+A server that can't attest refuses to run it.
+
+33
+00:03:30,899 --> 00:03:37,896
+With a key broker, the app's data key is released only to attested servers, so a copied data folder can't be read.
+
+34
+00:03:38,276 --> 00:03:43,161
+Audit records carry the attestation, so an auditor can check where data was processed.
+
+35
+00:03:43,541 --> 00:03:47,488
+This is tested on an emulated attestation platform so far.
+
+36
+00:03:48,568 --> 00:03:49,741
+That's where you can help.
+
+37
+00:03:50,121 --> 00:04:00,489
+To move these features out of preview, we need time on real hardware: a GPU server, a BlueField card, a CXL machine, or a confidential VM.
+
+38
+00:04:00,869 --> 00:04:10,704
+If you have access, or cloud credits, open a hardware offer on the GitHub repository. A few days of remote access can verify a feature for everyone.
+
+39
+00:04:11,784 --> 00:04:15,368
+Next in this series: time to market, with the ten built-in apps.
+
+40
+00:04:15,748 --> 00:04:22,703
+AI App Server is free to use, and its SDKs, example apps and templates are Apache 2.0.
+
+41
+00:04:23,083 --> 00:04:29,611
+Download it and follow the ten-minute quickstart at github.com/Sandaal/ai-app-server.
+

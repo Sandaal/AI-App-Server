@@ -1,0 +1,230 @@
+WEBVTT
+
+1
+00:00:00.900 --> 00:00:02.820
+Building an AI demo takes a day.
+
+2
+00:00:03.200 --> 00:00:05.163
+Taking it to production takes months.
+
+3
+00:00:05.543 --> 00:00:11.217
+In this video, we look at why, and at the architecture AI App Server uses to close that gap.
+
+4
+00:00:12.297 --> 00:00:14.985
+The model call itself is a few lines of code.
+
+5
+00:00:15.365 --> 00:00:21.424
+Around it, a production app needs a vector database and an ingestion pipeline, memory and a cache,
+
+6
+00:00:21.804 --> 00:00:24.833
+a job queue, and a gateway across model providers.
+
+7
+00:00:25.213 --> 00:00:29.245
+Then guardrails, sign-in and audit, deploys, monitoring and backups.
+
+8
+00:00:29.625 --> 00:00:34.148
+That's eight systems to choose, secure, pay for and run, for every single app.
+
+9
+00:00:35.228 --> 00:00:38.236
+AI App Server is an application server for AI.
+
+10
+00:00:38.616 --> 00:00:45.763
+You deploy chat, document extraction, agents and workflows the way you deploy web apps, on your own infrastructure.
+
+11
+00:00:46.143 --> 00:00:48.916
+Let's walk through the five design choices behind it.
+
+12
+00:00:49.996 --> 00:00:51.447
+First: one binary.
+
+13
+00:00:51.827 --> 00:00:59.997
+Document search is built in: hybrid search over PDFs, Office files, web pages, and connectors such as SharePoint and Git.
+
+14
+00:01:00.377 --> 00:01:06.543
+So are key-value memory, a cache, background jobs and event topics, with retries and dead letters.
+
+15
+00:01:06.923 --> 00:01:15.456
+Every model call goes through a built-in gateway, to OpenAI, Azure OpenAI, Anthropic, Gemini, Bedrock, or a local model.
+
+16
+00:01:15.836 --> 00:01:24.177
+And guardrails, sign-in, encryption and audit come with it, so you install one small download instead of wiring eight products together.
+
+17
+00:01:25.257 --> 00:01:26.879
+Here is how a request flows.
+
+18
+00:01:27.259 --> 00:01:31.632
+A browser, an app or an agent calls the server over HTTPS.
+
+19
+00:01:32.012 --> 00:01:33.953
+Guardrails check the request first.
+
+20
+00:01:34.333 --> 00:01:37.811
+Then your app's workers handle it, in Python or JavaScript.
+
+21
+00:01:38.191 --> 00:01:45.615
+Workers call models through the gateway, which counts tokens and cost, enforces budgets, caches, retries, and fails over.
+
+22
+00:01:45.995 --> 00:01:53.077
+And everything the app stores, from documents and vectors to memory, jobs and events, is encrypted on the server.
+
+23
+00:01:54.157 --> 00:01:58.424
+An app is just a folder, with one config file: ai-app.yaml.
+
+24
+00:01:58.804 --> 00:02:03.092
+This one is a complete chat over documents, from the knowledge-chat blueprint.
+
+25
+00:02:03.472 --> 00:02:10.469
+It names its models, here two local models through an OpenAI-compatible endpoint, and the documents to search.
+
+26
+00:02:10.849 --> 00:02:15.927
+It turns on guardrails that redact personal data and refuse prompt-injection attempts.
+
+27
+00:02:16.307 --> 00:02:22.216
+Every setting is commented, and you add Python or JavaScript only where you need custom behaviour.
+
+28
+00:02:23.296 --> 00:02:26.880
+Here is a real run, against a local model on a CPU.
+
+29
+00:02:27.260 --> 00:02:29.607
+aiapp new creates the app from a blueprint.
+
+30
+00:02:29.987 --> 00:02:32.056
+source add points it at your documents.
+
+31
+00:02:32.436 --> 00:02:37.087
+aiapp deploy indexes them and starts the app, with a web page and an API.
+
+32
+00:02:37.467 --> 00:02:42.480
+Ask a question, and the answer streams back with a citation to the document it came from.
+
+33
+00:02:43.560 --> 00:02:48.445
+Second: enterprise security is part of the platform, not something each app adds.
+
+34
+00:02:48.825 --> 00:02:53.199
+Every app gets the same sign-in, and everything the server stores is encrypted.
+
+35
+00:02:53.579 --> 00:02:59.936
+Every model call and every guardrail decision is audited, and logs never contain prompts or answers.
+
+36
+00:03:00.316 --> 00:03:03.153
+Part two of this series covers security in detail.
+
+37
+00:03:04.233 --> 00:03:05.492
+Third: clusters.
+
+38
+00:03:05.872 --> 00:03:10.523
+Several servers form a cluster using Raft, a proven consensus protocol.
+
+39
+00:03:10.903 --> 00:03:14.679
+Every node holds all the data, and every node serves requests.
+
+40
+00:03:15.059 --> 00:03:23.037
+A write is acknowledged only after a majority of nodes have stored it, so a three-node cluster can lose any one node without losing data.
+
+41
+00:03:23.417 --> 00:03:26.895
+If the leader fails, another node is elected in about a second.
+
+42
+00:03:27.275 --> 00:03:34.336
+In our node-loss test, on three containers on one machine, about twenty-six hundred writes went through, and none were lost.
+
+43
+00:03:35.416 --> 00:03:39.448
+Fourth: open protocols, so the code and tools you have keep working.
+
+44
+00:03:39.828 --> 00:03:47.167
+Chat apps answer the OpenAI chat API, so any OpenAI client can call them by changing the base URL.
+
+45
+00:03:47.547 --> 00:03:55.717
+Apps can publish tools to AI agents over the Model Context Protocol, MCP, and call MCP servers themselves.
+
+46
+00:03:56.097 --> 00:04:01.409
+Redis clients, such as redis-cli and redis-py, can read and write an app's data.
+
+47
+00:04:01.789 --> 00:04:06.696
+And topics in Kafka or Azure Event Hubs flow in and out of apps through bridges.
+
+48
+00:04:07.776 --> 00:04:09.739
+Fifth: isolation between apps.
+
+49
+00:04:10.119 --> 00:04:17.159
+Each app runs in its own worker processes, with memory and file-size limits, and can't read another app's data.
+
+50
+00:04:17.539 --> 00:04:21.699
+Quotas cap storage, vectors, concurrent requests and worker memory,
+
+51
+00:04:22.079 --> 00:04:26.239
+and model spend per day or per month, for the app and for each API key.
+
+52
+00:04:26.619 --> 00:04:31.973
+So one misbehaving app can't exhaust another app's memory, disk, budget or workers.
+
+53
+00:04:32.353 --> 00:04:37.601
+We tested exactly that on Linux: a misbehaving app running next to a well-behaved one.
+
+54
+00:04:38.681 --> 00:04:46.191
+So that's the architecture: one binary, enterprise security, Raft clusters, open protocols, and per-app isolation.
+
+55
+00:04:47.271 --> 00:04:52.924
+Next in this series: enterprise security, and how one review of the platform covers every app.
+
+56
+00:04:53.304 --> 00:05:00.259
+AI App Server is free to use, and its SDKs, example apps and templates are Apache 2.0.
+
+57
+00:05:00.639 --> 00:05:07.167
+Download it and follow the ten-minute quickstart at github.com/Sandaal/ai-app-server.
+

@@ -1,0 +1,188 @@
+1
+00:00:00,900 --> 00:00:03,844
+Every AI app eventually meets the security review.
+
+2
+00:00:04,224 --> 00:00:11,669
+And every team answers the same questions: who can call it, where the data is stored, what reaches the model, and who did what.
+
+3
+00:00:12,049 --> 00:00:16,615
+AI App Server answers them once, in the platform, for every app that runs on it.
+
+4
+00:00:17,695 --> 00:00:23,156
+We'll walk through five areas: sign-in, encryption, the audit log, guardrails, and secrets.
+
+5
+00:00:23,536 --> 00:00:26,459
+But first, what happens before you configure anything.
+
+6
+00:00:27,539 --> 00:00:28,989
+The server starts safe.
+
+7
+00:00:29,369 --> 00:00:33,039
+It listens only on the local machine until you choose otherwise.
+
+8
+00:00:33,419 --> 00:00:38,027
+The command line talks to it through a socket in the data folder, not over the network.
+
+9
+00:00:38,407 --> 00:00:43,207
+A new version of an app must start and pass a health check before it serves any traffic.
+
+10
+00:00:43,587 --> 00:00:47,917
+And each app runs in its own processes, and can't read another app's data.
+
+11
+00:00:48,997 --> 00:00:50,725
+Access control comes next.
+
+12
+00:00:51,105 --> 00:00:56,972
+Create an API key for an app, and from that moment every caller needs a key or a sign-in token.
+
+13
+00:00:57,352 --> 00:00:59,528
+Without one, the request is refused.
+
+14
+00:00:59,908 --> 00:01:04,516
+Keys carry roles, and routes can require a role, such as refunds or approver.
+
+15
+00:01:04,896 --> 00:01:09,077
+Keys are stored hashed: a lost key can't be shown again, only replaced.
+
+16
+00:01:10,157 --> 00:01:19,843
+For people, apps accept sign-in from Microsoft Entra ID, or any OpenID Connect provider, such as Okta, Auth0, Keycloak or Google.
+
+17
+00:01:20,223 --> 00:01:27,924
+The server checks each token's signature, issuer, audience and expiry, and fetches and rotates the signing keys itself.
+
+18
+00:01:28,304 --> 00:01:32,613
+Groups or app roles from your identity provider map onto the app's roles.
+
+19
+00:01:32,993 --> 00:01:34,785
+And routes require those roles.
+
+20
+00:01:35,165 --> 00:01:41,800
+Built-in pages can sign people in themselves, with PKCE and sealed cookies, and CSRF protection.
+
+21
+00:01:42,180 --> 00:01:49,327
+One honest note: Entra ID sign-in is tested against a fake of its APIs so far, and live checks are planned.
+
+22
+00:01:50,407 --> 00:01:51,708
+Second: encryption.
+
+23
+00:01:52,088 --> 00:01:59,939
+Everything the server stores is encrypted: documents, vectors, memory, jobs, events, secrets, and the audit log itself.
+
+24
+00:02:00,319 --> 00:02:06,164
+It uses AES-256-GCM, with keys derived from one master key.
+
+25
+00:02:06,544 --> 00:02:12,709
+Logs and traces never contain prompts or answers, only names, ids, sizes and timings.
+
+26
+00:02:13,089 --> 00:02:18,252
+Back up the master key separately from the data, and on Kubernetes, keep it in a Secret.
+
+27
+00:02:19,332 --> 00:02:20,804
+Third: the audit log.
+
+28
+00:02:21,184 --> 00:02:26,261
+Every model call is recorded with the app, model, tokens, cost and duration.
+
+29
+00:02:26,641 --> 00:02:33,788
+Guardrail decisions are recorded too, with the reason. The newest record shows a prompt-injection attempt being blocked.
+
+30
+00:02:34,168 --> 00:02:39,117
+Records can be exported to your SIEM, and the console shows them to auditors and admins.
+
+31
+00:02:40,197 --> 00:02:41,563
+Fourth: guardrails.
+
+32
+00:02:41,943 --> 00:02:50,391
+pii-redaction removes emails, phone numbers, card numbers and other personal data before anything is sent to a model provider.
+
+33
+00:02:50,771 --> 00:02:58,685
+Others redact personal data in answers, block topics, limit input size, or withhold answers that cite no document.
+
+34
+00:02:59,065 --> 00:03:04,463
+prompt-injection refuses messages that try to override the instructions, like this one.
+
+35
+00:03:04,843 --> 00:03:09,963
+For more, guardrails can call Microsoft Presidio, or Azure AI Content Safety.
+
+36
+00:03:11,043 --> 00:03:12,259
+Fifth: secrets.
+
+37
+00:03:12,639 --> 00:03:18,719
+Provider keys never belong in app files. aiapp secret set stores them encrypted on the server.
+
+38
+00:03:19,099 --> 00:03:20,613
+Apps refer to them by name.
+
+39
+00:03:20,993 --> 00:03:26,924
+Or keep them in Azure Key Vault or HashiCorp Vault, where your security team already manages them.
+
+40
+00:03:27,304 --> 00:03:34,195
+HashiCorp Vault is tested against a real Vault server; Azure Key Vault against a fake of its API, for now.
+
+41
+00:03:35,275 --> 00:03:39,051
+The docs include a short checklist for opening a server to the network.
+
+42
+00:03:39,431 --> 00:03:45,105
+Require credentials on every app, put HTTPS in front, and back up the master key.
+
+43
+00:03:45,485 --> 00:03:49,688
+Then choose guardrails and quotas for each app, and export the audit log.
+
+44
+00:03:50,068 --> 00:03:54,484
+That's the security model: one review of the platform, instead of one per app.
+
+45
+00:03:55,564 --> 00:04:01,025
+Next in this series: hardware support, from a laptop CPU to GPU servers.
+
+46
+00:04:01,405 --> 00:04:08,360
+AI App Server is free to use, and its SDKs, example apps and templates are Apache 2.0.
+
+47
+00:04:08,740 --> 00:04:15,268
+Download it and follow the ten-minute quickstart at github.com/Sandaal/ai-app-server.
+

@@ -61,7 +61,7 @@ These need accounts or paid services. We plan to check them against the real ser
 
 | Feature | What's emulated | What real hardware would show |
 |---|---|---|
-| GPU allocation and vLLM supervision | GPUs in a hardware profile | Whether vLLM, GPU sharing and KV-cache offload (LMCache) work and how fast |
+| GPU allocation and vLLM supervision | GPUs in a hardware profile | Whether vLLM, GPU allocation and KV-cache offload (LMCache) work and how fast |
 | Hardware detection: multi-socket NUMA, CXL memory, GPUs, Grace-class coherent memory | Built-in hardware profiles | Whether detection reads real machines correctly |
 | Vector tiering onto CXL memory | `cxl-server` profile; the kernel's tiering setting | Real latency and capacity gains |
 | Data-plane drivers and BlueField detection | `dpu-server` profile | Detection on a real card (the DPU driver itself isn't built, see below) |

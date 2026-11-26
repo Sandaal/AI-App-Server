@@ -61,6 +61,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Status and help wanted: status.md
+  - Walkthrough videos: videos.md
   - Get started:
       - get-started/index.md
       - How it works: get-started/how-it-works.md

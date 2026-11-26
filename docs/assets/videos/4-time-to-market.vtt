@@ -1,0 +1,146 @@
+WEBVTT
+
+1
+00:00:00.900 --> 00:00:03.780
+Most AI projects start from an empty repository.
+
+2
+00:00:04.160 --> 00:00:06.784
+With AI App Server, you start from a working app.
+
+3
+00:00:07.164 --> 00:00:14.417
+In this video: the ten built-in apps, the three commands that deploy one, and the tests that let you change it with confidence.
+
+4
+00:00:15.497 --> 00:00:17.097
+Here's what ships in the box.
+
+5
+00:00:18.177 --> 00:00:21.143
+There are ten blueprints, each a complete, tested app.
+
+6
+00:00:21.523 --> 00:00:29.672
+Knowledge chat answers from your documents, with citations. Customer support calls your tools, and asks a person before refunds.
+
+7
+00:00:30.052 --> 00:00:41.145
+Document extraction turns invoices and forms into JSON, with the page and quote for every field. Summarization and classification handle long documents and routing.
+
+8
+00:00:41.525 --> 00:00:52.619
+Meeting notes, content review with human approval, data insights over SQL and CSV, a code assistant, and a workflow agent with tools and MCP complete the set.
+
+9
+00:00:53.699 --> 00:00:54.787
+Let's build one.
+
+10
+00:00:55.167 --> 00:00:58.111
+aiapp new creates the app, and prints the next steps.
+
+11
+00:00:58.491 --> 00:01:09.477
+Inside: the config file, sample documents, tests, golden evaluations, and instructions that teach coding assistants such as GitHub Copilot how the SDK works.
+
+12
+00:01:09.857 --> 00:01:15.212
+Add your documents, deploy, and the app is live, with a chat page and a streaming API.
+
+13
+00:01:16.292 --> 00:01:21.049
+This is the built-in chat page, answering from the employee handbook, with its source.
+
+14
+00:01:21.429 --> 00:01:25.632
+It ran on a local model on a CPU, so no data left the machine.
+
+15
+00:01:26.712 --> 00:01:28.696
+Customizing is mostly settings.
+
+16
+00:01:29.076 --> 00:01:33.343
+This workflow agent's instructions are plain text in its config file.
+
+17
+00:01:33.723 --> 00:01:38.096
+Its step limit, and the tools that wait for a person's approval, are settings too.
+
+18
+00:01:38.476 --> 00:01:41.825
+And tools from MCP servers plug in with one line.
+
+19
+00:01:42.905 --> 00:01:48.815
+When you need code, add a handler in Python or JavaScript, for just that route, job or event.
+
+20
+00:01:49.195 --> 00:01:52.736
+The server starts, watches and restarts the workers that run it.
+
+21
+00:01:53.816 --> 00:01:55.523
+Every blueprint ships with tests.
+
+22
+00:01:55.903 --> 00:02:02.900
+aiapp test starts a throwaway server and replaces the models with scripts, so tests are fast, free and repeatable.
+
+23
+00:02:03.280 --> 00:02:08.443
+Everything else is real: routes, workers, storage, search, jobs and guardrails.
+
+24
+00:02:08.823 --> 00:02:17.164
+aiapp eval runs golden questions against your real models, checking content, citations, latency, and a model's judgement.
+
+25
+00:02:17.544 --> 00:02:21.512
+Put both in CI, and you catch regressions before your users do.
+
+26
+00:02:22.592 --> 00:02:27.477
+Every deploy is a new, immutable version, and switches over with zero downtime.
+
+27
+00:02:27.857 --> 00:02:29.649
+Here, version two goes live.
+
+28
+00:02:30.029 --> 00:02:31.864
+aiapp versions lists them all.
+
+29
+00:02:32.244 --> 00:02:34.911
+And if something's wrong, rollback is one command.
+
+30
+00:02:35.991 --> 00:02:37.655
+And it runs where your data is.
+
+31
+00:02:38.035 --> 00:02:45.843
+There are installers for Windows, macOS and Linux, a Docker image, a Helm chart for Kubernetes, and templates for Azure.
+
+32
+00:02:46.223 --> 00:02:53.945
+The VS Code extension creates apps from blueprints, runs tests, deploys and rolls back, and checks your config as you type.
+
+33
+00:02:54.325 --> 00:02:58.144
+From idea to production in minutes, on infrastructure you control.
+
+34
+00:02:59.224 --> 00:03:02.488
+That's the end of this four-part series. Thanks for watching.
+
+35
+00:03:02.868 --> 00:03:09.823
+AI App Server is free to use, and its SDKs, example apps and templates are Apache 2.0.
+
+36
+00:03:10.203 --> 00:03:16.731
+Download it and follow the ten-minute quickstart at github.com/Sandaal/ai-app-server.
+

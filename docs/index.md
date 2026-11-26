@@ -31,7 +31,7 @@ aiapp deploy                                         # live at /apps/hr-bot/: ch
 
 <figure class="demo" markdown>
 ![From aiapp new to a chat that answers from your documents with sources, in three commands](assets/demo.gif)
-<figcaption>A real run: a local model on CPU via Ollama, with waits shortened.</figcaption>
+<figcaption>A real run: a local model on CPU via Ollama, with waits shortened. <a href="videos/">Watch the four walkthrough videos</a> (3 to 5 minutes each).</figcaption>
 </figure>
 
 ## The problem: an AI demo takes a day, the production app takes months
