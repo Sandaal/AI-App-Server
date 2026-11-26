@@ -1,5 +1,5 @@
 site_name: AI App Server
-site_description: Run AI applications (chat over documents, extraction, agents, workflows) from one small configuration file.
+site_description: Ship AI apps, not infrastructure. One open-source server runs chat over documents, extraction, agents and workflows, with vector search, memory, jobs, a model gateway, guardrails and audit built in.
 site_url: https://sandaal.github.io/ai-app-server/
 repo_url: https://github.com/Sandaal/ai-app-server
 repo_name: Sandaal/ai-app-server
@@ -8,8 +8,11 @@ copyright: AI App Server
 
 theme:
   name: material
+  custom_dir: overrides
   features:
     - navigation.tabs
+    - navigation.instant
+    - announce.dismiss
     - navigation.sections
     - navigation.top
     - navigation.footer
@@ -31,6 +34,11 @@ theme:
       toggle: { icon: material/weather-sunny, name: Light mode }
   icon:
     repo: fontawesome/brands/github
+    logo: material/robot-happy-outline
+  favicon: assets/favicon.svg
+
+extra_css:
+  - stylesheets/extra.css
 
 markdown_extensions:
   - admonition
@@ -46,6 +54,9 @@ markdown_extensions:
   - pymdownx.tabbed: { alternate_style: true }
   - pymdownx.highlight: { anchor_linenums: true }
   - pymdownx.inlinehilite
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 nav:
   - Home: index.md
@@ -100,6 +111,7 @@ nav:
       - Audit log and SIEM: operate/audit.md
       - Monitoring: operate/monitoring.md
       - Quotas and limits: operate/quotas.md
+      - Performance and sizing: operate/sizing.md
       - Hardware: operate/hardware.md
       - Clusters: operate/cluster.md
       - Confidential apps: operate/confidential.md

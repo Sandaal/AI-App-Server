@@ -1,0 +1,177 @@
+/* AI App Server docs: landing page and brand touches. */
+
+:root {
+  --aiapp-grad-a: #3f51b5;
+  --aiapp-grad-b: #7c4dff;
+  --aiapp-grad-c: #00b8d4;
+  --aiapp-radius: 14px;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  margin: 0 -0.8rem 1.5rem;
+  padding: 3.2rem 2rem 2.6rem;
+  border-radius: 0 0 var(--aiapp-radius) var(--aiapp-radius);
+  color: #fff;
+  background:
+    radial-gradient(1200px 400px at 85% -10%, rgba(0, 184, 212, 0.45), transparent 60%),
+    linear-gradient(135deg, var(--aiapp-grad-a) 0%, var(--aiapp-grad-b) 100%);
+  overflow: hidden;
+}
+.hero h1 {
+  color: #fff;
+  font-size: 2.9rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0.3rem 0 1rem;
+}
+.hero .headerlink { display: none; }
+.hero-eyebrow {
+  display: inline-block;
+  margin: 0;
+  padding: 0.2rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.95;
+}
+.hero-lead {
+  max-width: 40rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+.hero .md-button {
+  margin: 0.4rem 0.4rem 0 0;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.7);
+}
+.hero .md-button:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+.hero .md-button--primary {
+  background: #fff;
+  color: var(--aiapp-grad-a);
+  border-color: #fff;
+}
+.hero .md-button--primary:hover { background: #eef0ff; color: var(--aiapp-grad-a); }
+
+.hero-code { margin-top: -0.2rem; }
+.hero-code pre { border-radius: var(--aiapp-radius); box-shadow: 0 10px 30px rgba(30, 30, 80, 0.18); }
+
+/* ---------- Section headings on the landing page ---------- */
+.md-content article > h2 {
+  margin-top: 2.6rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Cards ---------- */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid.cards > ol > li {
+  border-radius: var(--aiapp-radius);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.md-typeset .grid.cards > ul > li:hover {
+  transform: translateY(-2px);
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 8px 24px rgba(63, 81, 181, 0.15);
+}
+.md-typeset .grid.cards .twemoji,
+.md-typeset .grid.cards .twemoji svg { color: var(--aiapp-grad-b); }
+.md-typeset .grid.cards .twemoji { height: 1.4em; width: 1.4em; vertical-align: -0.35em; margin-right: 0.2em; }
+.md-typeset .grid.cards .twemoji svg { height: 1.4em; width: 1.4em; }
+
+/* Pain points: compact, warm accent */
+.md-typeset .pain > ul > li { font-size: 0.78rem; }
+.md-typeset .pain .twemoji svg { color: #e65100; }
+
+/* Blueprint gallery: compact tiles */
+.md-typeset .grid.blueprints { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.md-typeset .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media screen and (max-width: 76.1875em) {
+  .md-typeset .grid.blueprints { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
+  .md-typeset .grid.four { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+}
+.md-typeset .blueprints > ul > li { font-size: 0.76rem; text-align: left; }
+.md-typeset .blueprints > ul > li p { margin: 0.25em 0; }
+
+/* Numbered steps */
+.md-typeset .steps .step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  margin-right: 0.4rem;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--aiapp-grad-a), var(--aiapp-grad-b));
+}
+
+/* ---------- Comparison table ---------- */
+.md-typeset .compare table:not([class]) {
+  display: table;
+  width: 100%;
+  border-radius: var(--aiapp-radius);
+  overflow: hidden;
+  font-size: 0.78rem;
+}
+.md-typeset .compare table:not([class]) th { background: var(--md-default-fg-color--lightest); }
+.md-typeset .compare table:not([class]) td:nth-child(2) { color: var(--md-default-fg-color--light); }
+.md-typeset .compare table:not([class]) td:nth-child(3) { background: rgba(124, 77, 255, 0.06); }
+
+/* ---------- Stats ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 0.5rem;
+}
+.stat {
+  padding: 1.1rem 1rem;
+  border-radius: var(--aiapp-radius);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  background: linear-gradient(180deg, rgba(124, 77, 255, 0.06), transparent);
+}
+.stat-value {
+  display: block;
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.1;
+  background: linear-gradient(135deg, var(--aiapp-grad-a), var(--aiapp-grad-b));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.stat-label { display: block; margin-top: 0.35rem; font-size: 0.74rem; color: var(--md-default-fg-color--light); }
+.stats-note { font-size: 0.7rem; color: var(--md-default-fg-color--light); }
+
+/* ---------- Closing call to action ---------- */
+.cta {
+  margin: 2.5rem 0 1rem;
+  padding: 2rem;
+  text-align: center;
+  border-radius: var(--aiapp-radius);
+  color: #fff;
+  background: linear-gradient(135deg, var(--aiapp-grad-b) 0%, var(--aiapp-grad-a) 100%);
+}
+.md-content article .cta h2 { margin-top: 0; color: #fff; }
+.cta .headerlink { display: none; }
+.cta .md-button { color: #fff; border-color: rgba(255, 255, 255, 0.7); margin: 0.3rem; }
+.cta .md-button--primary { background: #fff; color: var(--aiapp-grad-a); border-color: #fff; }
+
+/* ---------- Dark mode tweaks ---------- */
+[data-md-color-scheme="slate"] .md-typeset .compare table:not([class]) td:nth-child(3) { background: rgba(124, 77, 255, 0.14); }
+[data-md-color-scheme="slate"] .stat { background: linear-gradient(180deg, rgba(124, 77, 255, 0.14), transparent); }
+[data-md-color-scheme="slate"] .stat-value { background: linear-gradient(135deg, #8c9eff, #b388ff); -webkit-background-clip: text; background-clip: text; }
+
+/* ---------- Small screens ---------- */
+@media screen and (max-width: 44.9375em) {
+  .hero { padding: 2rem 1.2rem 1.8rem; margin: 0 -0.8rem 1rem; }
+  .hero h1 { font-size: 2.1rem; }
+  .hero h1 br { display: none; }
+}
