@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **npm:** the JS client is published as `@sandaal/client` (`npm install @sandaal/client`); it was named `@aiapp-server/client` but never published under that name. The embedded handler runtime keeps `@aiapp-server/server`. The Publish workflow can build the npm package from a commit other than the tag (`npm_ref`).
 - **Demo GIF** on the README and the docs home page, recorded from a real run (`scripts/demo/record.sh`: the server and a local Ollama model, each in a container). The docs site also gets a social preview image for shared links.
 - **Walkthrough videos** for social media, one per feature slide (architecture, security, hardware, time to market), 3 to 5 minutes each, with voice-over and captions: `scripts/video/make.sh`. Terminal scenes use output captured from a real server (`scripts/video/capture.sh`); the voice is Kokoro text-to-speech, offline. They are on the docs site's new Walkthrough videos page, with captions.
 - **Feature slide 3** no longer says vLLM shares GPUs (each model gets its own) or that DPUs offload crypto (the DPU driver isn't built yet).

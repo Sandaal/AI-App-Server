@@ -1,4 +1,4 @@
-# @aiapp-server/client
+# @sandaal/client
 
 The JS/TS client and web components for apps served by AI App Server.
 
@@ -47,7 +47,7 @@ document.querySelector("aiapp-chat").tokenProvider = async () =>
 ## Client
 
 ```ts
-import { AIAppClient, AIAppError } from "@aiapp-server/client";
+import { AIAppClient, AIAppError } from "@sandaal/client";
 
 const client = new AIAppClient({ baseUrl: "https://ai.contoso.com", app: "hr-bot", token: getToken });
 

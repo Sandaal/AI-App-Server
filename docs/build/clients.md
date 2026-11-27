@@ -15,11 +15,11 @@ Streaming routes answer with **Server-Sent Events**: `data:` lines with text, po
 ## JavaScript / TypeScript
 
 ```bash
-npm install @aiapp-server/client
+npm install @sandaal/client
 ```
 
 ```ts
-import { AIAppClient, AIAppError } from "@aiapp-server/client";
+import { AIAppClient, AIAppError } from "@sandaal/client";
 
 const client = new AIAppClient({ baseUrl: "https://ai.contoso.com", app: "hr-bot", token: getToken });
 

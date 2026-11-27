@@ -1,8 +1,12 @@
 {
-  "name": "@aiapp-server/client",
+  "name": "@sandaal/client",
   "version": "3.0.0",
   "description": "Client and web components for AI App Server apps: streaming chat, uploads, approvals.",
   "license": "Apache-2.0",
+  "homepage": "https://sandaal.github.io/ai-app-server/build/clients/",
+  "repository": { "type": "git", "url": "git+https://github.com/Sandaal/ai-app-server.git", "directory": "sdk/js/client" },
+  "bugs": "https://github.com/Sandaal/ai-app-server/issues",
+  "keywords": ["ai", "llm", "chat", "rag", "sse", "web-components"],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
