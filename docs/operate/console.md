@@ -44,4 +44,4 @@ For your team, the server can host the console at `https://YOUR-HOST/_console/` 
 
 ## Script the console API
 
-The console's API is also available to scripts through `ConsoleClient` in the JS SDK (`@sandaal/client`).
+The console's API is also available to scripts through `ConsoleClient` in the JS SDK (`@sandaal/ai-app-server-client`).

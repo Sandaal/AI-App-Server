@@ -1,5 +1,5 @@
 {
-  "name": "@sandaal/client",
+  "name": "@sandaal/ai-app-server-client",
   "version": "3.0.0",
   "description": "Client and web components for AI App Server apps: streaming chat, uploads, approvals.",
   "license": "Apache-2.0",
